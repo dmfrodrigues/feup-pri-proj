@@ -4,7 +4,7 @@ import queue
 import urllib.request
 from threading import Thread
 
-import json
+import json, csv
 
 def perform_web_requests(addresses, no_workers):
     class Worker(Thread):
