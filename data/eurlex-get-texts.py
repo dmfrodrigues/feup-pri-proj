@@ -1,9 +1,10 @@
 """
-Processes eurlex/document-raw.json and finds urls for documents that do not have
+Processes eurlex/processed.csv and finds urls for documents that do not have
 a text_url supplied by api.epdb.eu
 """
 
-import sys, json
+import sys, csv
+csv.field_size_limit(sys.maxsize)
 
 import time
 import os.path
@@ -11,7 +12,7 @@ import os.path
 from bs4 import BeautifulSoup
 
 import queue
-import urllib.request
+import urllib.parse, urllib.request
 from threading import Thread
 
 def get_texts_parallel(entries, no_workers):
@@ -29,7 +30,7 @@ def get_texts_parallel(entries, no_workers):
                 content = self.queue.get()
                 if content == "":
                     break
-                print("Processing {} ({})".format(content["doc_id"], content["date_document"]), file=sys.stderr)
+                print("Processing {} ({})".format(content["celex"], content["date"]), file=sys.stderr)
                 entry = get_text(content)
                 self.results.append(entry)
                 self.queue.task_done()
@@ -80,32 +81,49 @@ def get_text_from_url(text_url):
     # if textEl != None: return textEl.get_text('\n').strip()
     return soup.get_text('\n').strip()
 
+def urlencode(s):
+    return urllib.parse.quote_plus(s)
+
+def pathencode(s):
+    return urlencode(s).replace("%28", "(").replace("%29", ")")
+
 def get_text(entry):
-    key = entry["doc_id"]
-    text_url = entry["text_url"]
-    filepath = "eurlex/{}.txt".format(key)
-    if text_url != "":
-        if os.path.exists(filepath):
-            print("File already exists: {}".format(key), file=sys.stderr)
+    celex = entry["celex"]
+    filepath = "eurlex/texts/{}.txt".format(pathencode(celex))
+    if os.path.exists(filepath):
+        print("File already exists: {}".format(celex), file=sys.stderr)
+        return entry
+    else:
+        text_url = "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:{}".format(urlencode(celex))
+        text = get_text_from_url(text_url)
+        if text != None:
+            f = open(filepath, 'w')
+            f.write(text)
+            print("Wrote: {}".format(celex), file=sys.stderr)
+            entry["text_url"] = text_url
             return entry
-        else:
-            text_url = entry["eurlex_perma_url"].replace("http://eur-lex.europa.eu/LexUriServ/LexUriServ.do", "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/").replace(":EN:NOT", "")
-            text = get_text_from_url(text_url)
-            if text != None:
-                f = open(filepath, 'w')
-                f.write(text)
-                print("Wrote: {}".format(key), file=sys.stderr)
-                entry["text_url"] = text_url
-                return entry
-                
-            print("Problem raised: {}, url={}".format(key, text_url), file=sys.stderr)
-            return None
+            
+        print("Problem raised: {}, url={}".format(celex, text_url), file=sys.stderr)
+        return None
     return None
 
-data = json.load(sys.stdin)
+r = csv.reader(sys.stdin)
+columns = next(r)
+
+# print(columns, file=sys.stderr)
+
+data = dict()
+for row in r:
+    # print(row, file=sys.stderr)    
+    entry = dict()
+    for col in columns:
+        entry[col] = row[columns.index(col)]
+    data[entry["celex"]] = entry
+
 keys = list(data.keys())
 keys.sort(reverse=True)
-# data = [data[key] for key in keys if data[key]["date_document"] >= "1950-01-01" and not os.path.exists("eurlex/{}.txt".format(key))]
+
+# data = [data[key] for key in keys if data[key]["date"] >= "2010-01-01" and not os.path.exists("eurlex/texts/{}.txt".format(urlencode(key)))]
 data = list(data.values())
 
 results = get_texts_parallel(data, 8)
@@ -114,6 +132,10 @@ out = dict()
 for entry in results:
     if entry == None:
         continue
-    key = entry["doc_id"]
+    key = entry["celex"]
     out[key] = entry
-print(json.dumps(out, sort_keys=True, indent=2))
+
+w = csv.writer(sys.stdout)
+w.writerow(columns)
+for celex, entry in out:
+    w.writerow([entry[col] for col in columns])
