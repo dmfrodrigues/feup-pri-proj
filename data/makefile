@@ -1,17 +1,17 @@
 .DELETE_ON_ERROR:
 
-all: eurlex/with_texts.csv
+all: eurlex/combined.csv
 
-# eurlex/compiled.json: eurlex/with_texts.json eurlex-compile.py | eurlex
-# 	python3 eurlex-compile.py < $< > $@
+eurlex/combined.csv: eurlex/filtered.csv eurlex/texts.txt eurlex-combine.py
+	python3 eurlex-combine.py eurlex/filtered.csv eurlex/texts.txt > $@
 
-eurlex/with_texts.csv: eurlex/filtered.csv eurlex-get-texts.py | eurlex eurlex/texts
+eurlex/texts.txt: eurlex/filtered.csv eurlex-get-texts.py | eurlex/texts
 	python3 eurlex-get-texts.py < $< > $@
 
-eurlex/filtered.csv: eurlex/processed.csv eurlex-filter.py | eurlex
+eurlex/filtered.csv: eurlex/processed.csv eurlex-filter.py
 	python3 eurlex-filter.py < $< > $@
 
-eurlex/processed.csv: eurlex/raw.json eurlex-process.py | eurlex
+eurlex/processed.csv: eurlex/raw.json eurlex-process.py
 	python3 eurlex-process.py < $< > $@
 
 eurlex/raw.json: eurlex-get-raw.py | eurlex

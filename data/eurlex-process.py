@@ -35,6 +35,7 @@ for key in input_data:
 
     url = entry["eurlex_perma_url"]
     celex = get_celex_from_url(url)
+
     newEntry = {
         "celex": celex,
         
@@ -58,14 +59,11 @@ for key in input_data:
 
     data[celex] = newEntry
 
-    w.writerow([newEntry[col] for col in columns])
-
 LEGAL_BASIS_REPLACEMENTS = {
 }
 
 for celex in data:
-    entry = data[celex]
-    legal_basis_old = entry["legal_basis"]
+    legal_basis_old = data[celex]["legal_basis"]
     legal_basis = []
 
     for s in legal_basis_old:
@@ -78,10 +76,21 @@ for celex in data:
 
         legal_basis.append(s)
     
-    data[celex]["legal_basis"] = legal_basis
-
     for basis in legal_basis:
         if basis not in data:
             print("{}: legal basis {} not available".format(celex, basis), file=sys.stderr)
             # if re.match(r'([a-zA-Z0-9\(\)\-\/]+)', basis) == None:
             #     print("{}: legal basis {} not available and is strange".format(celex, basis), file=sys.stderr)
+            pass
+    
+    data[celex]["legal_basis"] = legal_basis
+
+    assert "".join(data[celex]["directory_codes"    ]).find(";") == -1
+    assert "".join(data[celex]["eurovoc_descriptors"]).find(";") == -1
+    assert "".join(data[celex]["legal_basis"        ]).find(";") == -1
+
+    data[celex]["directory_codes"    ] = ";".join(data[celex]["directory_codes"    ])
+    data[celex]["eurovoc_descriptors"] = ";".join(data[celex]["eurovoc_descriptors"])
+    data[celex]["legal_basis"        ] = ";".join(data[celex]["legal_basis"        ])
+
+    w.writerow([data[celex][col] for col in columns])

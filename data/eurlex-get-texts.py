@@ -128,14 +128,8 @@ data = list(data.values())
 
 results = get_texts_parallel(data, 8)
 
-out = dict()
 for entry in results:
     if entry == None:
         continue
     key = entry["celex"]
-    out[key] = entry
-
-w = csv.writer(sys.stdout)
-w.writerow(columns)
-for celex, entry in out:
-    w.writerow([entry[col] for col in columns])
+    print(key)
