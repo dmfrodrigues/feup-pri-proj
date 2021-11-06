@@ -30,7 +30,7 @@ def get_texts_parallel(entries, no_workers):
                 content = self.queue.get()
                 if content == "":
                     break
-                print("Processing {} ({})".format(content["celex"], content["date"]), file=sys.stderr)
+                # print("Processing {} ({})".format(content["celex"], content["date"]), file=sys.stderr)
                 entry = get_text(content)
                 self.results.append(entry)
                 self.queue.task_done()
@@ -39,7 +39,7 @@ def get_texts_parallel(entries, no_workers):
                 dt = now_time - self.start_time
                 size = self.queue.qsize()
                 dsize = size - self.start_size
-                if dsize < 0:
+                if dsize < 0 and (-dsize)%10 == 0:
                     dt1 = dt/(-dsize)
                     print("ETA {:.2f} seconds".format(dt1 * size), file=sys.stderr)
 
@@ -90,20 +90,28 @@ def pathencode(s):
 def get_text(entry):
     celex = entry["celex"]
     filepath = "eurlex/texts/{}.txt".format(pathencode(celex))
+    filepath_notexts = "eurlex/notexts/{}.txt".format(pathencode(celex))
     if os.path.exists(filepath):
-        print("File already exists: {}".format(celex), file=sys.stderr)
+        # print("File already exists: {}".format(celex), file=sys.stderr)
         return entry
+    elif os.path.exists(filepath_notexts):
+        # print("File already known not to exist: {}".format(celex), file=sys.stderr)
+        return None
     else:
         text_url = "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:{}".format(urlencode(celex))
         text = get_text_from_url(text_url)
         if text != None:
             f = open(filepath, 'w')
             f.write(text)
+            f.close()
             print("Wrote: {}".format(celex), file=sys.stderr)
             entry["text_url"] = text_url
             return entry
             
         print("Problem raised: {}, url={}".format(celex, text_url), file=sys.stderr)
+        f = open(filepath_notexts, 'w')
+        f.write("")
+        f.close()
         return None
     return None
 

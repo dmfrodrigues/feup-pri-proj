@@ -106,7 +106,7 @@ for celex in data:
     
     for basis in legal_basis:
         if basis not in data:
-            print("{}: legal basis {} not available".format(celex, basis), file=sys.stderr)
+            # print("{}: legal basis {} not available".format(celex, basis), file=sys.stderr)
             # if re.match(r'([a-zA-Z0-9\(\)\-\/]+)', basis) == None:
             #     print("{}: legal basis {} not available and is strange".format(celex, basis), file=sys.stderr)
             pass
@@ -129,7 +129,7 @@ for celex in data:
     
     for rel in relationships:
         if rel not in data:
-            print("{}: relationship {} not available".format(celex, rel), file=sys.stderr)
+            # print("{}: relationship {} not available".format(celex, rel), file=sys.stderr)
             # if re.match(r'([a-zA-Z0-9\(\)\-\/]+)', rel) == None:
             #     print("{}: relationship {} not available and is strange".format(celex, rel), file=sys.stderr)
             pass

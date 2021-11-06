@@ -5,7 +5,7 @@ all: eurlex/combined.csv
 eurlex/combined.csv: eurlex/filtered.csv eurlex/texts.txt eurlex-combine.py
 	python3 eurlex-combine.py eurlex/filtered.csv eurlex/texts.txt > $@
 
-eurlex/texts.txt: eurlex/filtered.csv eurlex-get-texts.py | eurlex/texts
+eurlex/texts.txt: eurlex/filtered.csv eurlex-get-texts.py | eurlex/texts eurlex/notexts
 	python3 eurlex-get-texts.py < $< > $@
 
 eurlex/filtered.csv: eurlex/processed.csv eurlex-filter.py
@@ -22,4 +22,7 @@ eurlex:
 	mkdir -p $@
 
 eurlex/texts: | eurlex
+	mkdir -p $@
+
+eurlex/notexts: | eurlex
 	mkdir -p $@
