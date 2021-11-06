@@ -1,11 +1,23 @@
 import re
 import sys, json, csv
 
-CELEX_REGEX = re.compile("http:\/\/eur-lex\.europa\.eu\/LexUriServ\/LexUriServ\.do\?uri=CELEX:([a-zA-Z0-9\(\)\-]+):EN:NOT")
+CELEX_REGEX = re.compile(r"http:\/\/eur-lex\.europa\.eu\/LexUriServ\/LexUriServ\.do\?uri=CELEX:([a-zA-Z0-9\(\)\-]+):EN:NOT")
 def get_celex_from_url(url):
     m = CELEX_REGEX.match(url)
-    ret = m.group(1)
-    return ret
+    try:
+        ret = m.group(1)
+        return ret
+    except:
+        return None
+
+CELEX_REL_REGEX = re.compile(r"http:\/\/eur-lex\.europa\.eu\/Result\.do\?RechType=RECH_celex&amp;lang=en&amp;code=([a-zA-Z0-9\(\)\-]*)")
+def get_celex_from_url_rel(url):
+    m = CELEX_REL_REGEX.match(url)
+    try:
+        ret = m.group(1)
+        return ret
+    except:
+        return None
 
 input_data = json.load(sys.stdin)
 
@@ -63,6 +75,7 @@ LEGAL_BASIS_REPLACEMENTS = {
 }
 
 for celex in data:
+    # LEGAL_BASIS
     legal_basis_old = data[celex]["legal_basis"]
     legal_basis = []
 
@@ -85,10 +98,13 @@ for celex in data:
     
     data[celex]["legal_basis"] = legal_basis
 
+    # OTHERS
+    assert "".join(data[celex]["subject_matter"     ]).find(";") == -1
     assert "".join(data[celex]["directory_codes"    ]).find(";") == -1
     assert "".join(data[celex]["eurovoc_descriptors"]).find(";") == -1
     assert "".join(data[celex]["legal_basis"        ]).find(";") == -1
 
+    data[celex]["subject_matter"     ] = ";".join(data[celex]["subject_matter"     ])
     data[celex]["directory_codes"    ] = ";".join(data[celex]["directory_codes"    ])
     data[celex]["eurovoc_descriptors"] = ";".join(data[celex]["eurovoc_descriptors"])
     data[celex]["legal_basis"        ] = ";".join(data[celex]["legal_basis"        ])
