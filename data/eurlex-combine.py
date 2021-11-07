@@ -1,7 +1,7 @@
 import urllib.parse
 
 import sys
-import csv
+import csv, json
 
 def urlencode(s):
     return urllib.parse.quote_plus(s)
@@ -22,6 +22,7 @@ r = csv.reader(filtered_file, quotechar="'")
 columns = next(r)
 celex_idx = columns.index("celex")
 columns.append("text")
+w.writerow(columns)
 
 i = 0
 for row in r:
@@ -32,7 +33,7 @@ for row in r:
         f = open(f"eurlex/texts/{pathencode(celex)}.txt", "r")
         s = f.read()
         f.close()
-        row.append(s)
+        row.append(json.dumps(s))
         w.writerow(row)
     i += 1
 

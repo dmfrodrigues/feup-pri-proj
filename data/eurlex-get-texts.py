@@ -115,14 +115,11 @@ def get_text(entry):
         return None
     return None
 
-r = csv.reader(sys.stdin)
+r = csv.reader(sys.stdin, quotechar="'")
 columns = next(r)
 
-# print(columns, file=sys.stderr)
-
 data = dict()
-for row in r:
-    # print(row, file=sys.stderr)    
+for row in r: 
     entry = dict()
     for col in columns:
         entry[col] = row[columns.index(col)]

@@ -19,6 +19,17 @@ def get_celex_from_url_rel(url):
     except:
         return None
 
+def process_date(date: str) -> str:
+    if date == "": return ""
+    if date.endswith("00"): return ""
+    return date
+
+def process_ofeffect_date(date: str) -> str:
+    date = process_date(date)
+    if date == "": return ""
+    if date > "3000-00-00": return ""
+    return date
+
 input_data = json.load(sys.stdin)
 
 columns = [
@@ -37,7 +48,7 @@ columns = [
     "relationships"
 ]
 
-w = csv.writer(sys.stdout)
+w = csv.writer(sys.stdout, quotechar="'")
 w.writerow(columns)
 
 data = dict()
@@ -69,11 +80,11 @@ for key in input_data:
         "form": "Agreement",
         "date": entry["date_document"],
         
-        "title": entry["title"],
+        "title": (entry["title"] if entry["title"] != "\u00a0" else ""),
         
-        "oj_date": entry["oj_date"],
-        "of_effect": entry["of_effect"],
-        "end_validity": entry["end_validity"],
+        "oj_date": process_date(entry["oj_date"]),
+        "of_effect": process_ofeffect_date(entry["of_effect"]),
+        "end_validity": process_date(entry["end_validity"]),
         
         "addressee": entry["addressee"],
 
