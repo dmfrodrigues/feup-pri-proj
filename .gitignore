@@ -2,3 +2,4 @@ data/**/*.json
 data/**/*.txt
 data/**/*.csv
 *.zip
+.ipynb_checkpoints
