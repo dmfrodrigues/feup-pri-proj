@@ -97,6 +97,9 @@ for key in input_data:
 
     data[celex] = newEntry
 
+# Fix individual items
+if data["22005A0312(01)"]["of_effect"] == "2005-00-20": data["22005A0312(01)"]["of_effect"] = "2005-02-01"
+
 LEGAL_BASIS_REPLACEMENTS = {
 }
 
