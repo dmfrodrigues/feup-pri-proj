@@ -58,9 +58,8 @@ m = max([entry["end_validity"] for entry in data.values() if entry["end_validity
 m = len([entry["end_validity"] for entry in data.values() if entry["end_validity"] == ""]); print(f"    missing: {m}")
 
 print("addressee:")
-m = min([(len(entry["addressee"]), entry["celex"], entry["addressee"]) for entry in data.values() if entry["addressee"] != ""]); print(f"    min size: {m}")
-m = max([(len(entry["addressee"]), entry["celex"], entry["addressee"]) for entry in data.values() if entry["addressee"] != ""]); print(f"    max size: {m}")
+m = min([len(entry["addressee"]) for entry in data.values() if entry["addressee"] != ""]); print(f"    min size: {m}")
+m = max([len(entry["addressee"]) for entry in data.values() if entry["addressee"] != ""]); print(f"    max size: {m}")
 m = avg([len(entry["addressee"]) for entry in data.values() if entry["addressee"] != ""]); print(f"    avg size: {m}")
 m = len([entry["addressee"] for entry in data.values() if entry["addressee"] == ""]); print(f"    missing: {m}")
 
-print([(len(entry["addressee"]), entry["celex"], entry["addressee"]) for entry in data.values() if entry["addressee"] != "" and len(entry["addressee"]) == 255])
