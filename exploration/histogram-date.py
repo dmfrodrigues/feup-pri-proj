@@ -19,7 +19,7 @@ mpl_dates = []
 no_date = 0
 for row in r:
     d = row[date_idx]
-    d2 = row[ojdate_idx]
+    d2 = row[date_idx]
     if d != "":
         dates.append(d)
         mpl_dates.append(mdates.datestr2num(d))
