@@ -15,10 +15,13 @@ import queue
 import urllib.parse, urllib.request
 from threading import Thread
 
+import random
+
 def get_texts_parallel(entries, no_workers):
     class Worker(Thread):
-        def __init__(self, request_queue):
+        def __init__(self, id, request_queue):
             Thread.__init__(self)
+            self.id = id
             self.queue = request_queue
             self.results = []
 
@@ -39,7 +42,7 @@ def get_texts_parallel(entries, no_workers):
                 dt = now_time - self.start_time
                 size = self.queue.qsize()
                 dsize = size - self.start_size
-                if dsize < 0 and (-dsize)%10 == 0:
+                if self.id == 0 and dsize < 0 and (-dsize)%1 == 0:
                     dt1 = dt/(-dsize)
                     print("ETA {:.2f} seconds".format(dt1 * size), file=sys.stderr)
 
@@ -50,8 +53,8 @@ def get_texts_parallel(entries, no_workers):
 
     # Create workers and add tot the queue
     workers = []
-    for _ in range(no_workers):
-        worker = Worker(q)
+    for i in range(no_workers):
+        worker = Worker(i, q)
         worker.start()
         workers.append(worker)
     # Workers keep working till they receive an empty string
@@ -79,7 +82,10 @@ def get_text_from_url(text_url):
     # textEl = soup.find(id="docHtml")
     # print(soup)
     # if textEl != None: return textEl.get_text('\n').strip()
-    return soup.get_text('\n').strip()
+    txt = soup.get_text('\n').strip()
+    if txt.find("The requested document does not exist"): return None
+    # while "\n\n\n" in txt: txt = txt.replace("\n\n\n", "\n\n")
+    return txt
 
 def urlencode(s):
     return urllib.parse.quote_plus(s)
@@ -130,11 +136,12 @@ keys.sort(reverse=True)
 
 # data = [data[key] for key in keys if data[key]["date"] >= "2010-01-01" and not os.path.exists("eurlex/texts/{}.txt".format(urlencode(key)))]
 data = list(data.values())
+random.shuffle(data)
 
-results = get_texts_parallel(data, 8)
+results = get_texts_parallel(data, 32)
 
-for entry in results:
-    if entry == None:
-        continue
-    key = entry["celex"]
+keys = [entry['celex'] for entry in results if entry != None]
+keys.sort()
+
+for key in keys:
     print(key)
