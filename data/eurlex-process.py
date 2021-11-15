@@ -77,7 +77,7 @@ for key in input_data:
     newEntry = {
         "celex": celex,
         
-        "form": "Agreement",
+        "form": entry["form"],
         "date": entry["date_document"],
         
         "title": (entry["title"] if entry["title"] != "\u00a0" else ""),
@@ -94,6 +94,9 @@ for key in input_data:
         "legal_basis": [v["legal_basis"] for v in entry["legal_basis"]],
         "relationships": rels
     }
+
+    if celex in data:
+        print(f"WARNING: Document with CELEX {celex} was already in data; overwritting", file=sys.stderr)
 
     data[celex] = newEntry
 
