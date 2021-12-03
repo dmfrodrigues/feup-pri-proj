@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  mieic_solr:
+    image: mieic_solr
+    build: /solr
+    volumes:
+      - /data/eurlex/:/data
+
