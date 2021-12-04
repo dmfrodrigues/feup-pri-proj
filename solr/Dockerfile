@@ -1,8 +1,9 @@
 FROM solr:8.10
 
-# COPY /eurlex/combined.csv /data/combined.csv
+# COPY /data/final.json /data/final.json
+COPY /data/combined.csv /data/combined.csv
 
-COPY simple_schema.json /data/simple_schema.json
+COPY /schema/schema.json /data/schema.json
 
 COPY startup.sh /scripts/startup.sh
 
