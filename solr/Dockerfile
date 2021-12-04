@@ -1,6 +1,5 @@
 FROM solr:8.10
 
-# COPY /data/final.json /data/final.json
 COPY /data/combined.csv /data/combined.csv
 
 COPY /schema/schema.json /data/schema.json
