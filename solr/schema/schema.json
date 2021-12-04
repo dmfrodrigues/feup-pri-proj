@@ -54,6 +54,34 @@
         },
 
         {
+            "name":"docList",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.SimplePatternTokenizerFactory",
+                    "pattern":"[^;]+"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.TrimFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.TrimFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            }
+        },
+        
+        {
             "name":"docText",
             "class":"solr.TextField",
             "large": true,
@@ -91,40 +119,69 @@
             "type": "docTitle",
             "indexed": true
         },
-
+        {
+            "name": "celex",
+            "type": "docTitle",
+            "indexed": false
+        },
+        {
+            "name": "form",
+            "type": "docTitle",
+            "indexed": true
+        },
         {
             "name": "addressee",
             "type": "docAddressees",
             "indexed": true
         },
-
         {
             "name": "text",
             "type": "docText",
             "indexed": true
         },
-
         {
             "name": "date",
             "type": "docDate",
             "indexed": true
         },
-
         {
             "name": "oj_date",
             "type": "docDate",
             "indexed": true
         },
-
         {
             "name": "of_effect",
             "type": "docDate",
             "indexed": true
         },
-
         {
             "name": "end_validity",
             "type": "docDate",
+            "indexed": true
+        },
+        {
+            "name": "directory_codes",
+            "type": "docList",
+            "indexed": false
+        },
+        {
+            "name": "legal_basis",
+            "type": "docList",
+            "indexed": false
+        },
+        {
+            "name": "relationships",
+            "type": "docList",
+            "indexed": true
+        },
+        {
+            "name": "subject_matter",
+            "type": "docList",
+            "indexed": true
+        },
+        {
+            "name": "eurovoc_descriptors",
+            "type": "docList",
             "indexed": true
         }
     ]
