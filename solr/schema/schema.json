@@ -8,6 +8,62 @@
                     "class":"solr.StandardTokenizerFactory"
                 },
                 "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            }
+        },
+
+        {
+            "name":"docAddressees",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.SimplePatternTokenizerFactory",
+                    "pattern":"[^,]+"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.TrimFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.TrimFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            }
+        },
+
+        {
+            "name":"docText",
+            "class":"solr.TextField",
+            "large": true,
+            "stored": true,
+            "multiValued": false,
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"}
                 ]
@@ -21,12 +77,54 @@
                     {"class":"solr.LowerCaseFilterFactory"}
                 ]
             }
+        },
+
+        {
+            "name":"docDate",
+            "class":"solr.DatePointField"
         }
+        
     ],
     "add-field": [
         {
             "name": "title",
             "type": "docTitle",
+            "indexed": true
+        },
+
+        {
+            "name": "addressee",
+            "type": "docAddressees",
+            "indexed": true
+        },
+
+        {
+            "name": "text",
+            "type": "docText",
+            "indexed": true
+        },
+
+        {
+            "name": "date",
+            "type": "docDate",
+            "indexed": true
+        },
+
+        {
+            "name": "oj_date",
+            "type": "docDate",
+            "indexed": true
+        },
+
+        {
+            "name": "of_effect",
+            "type": "docDate",
+            "indexed": true
+        },
+
+        {
+            "name": "end_validity",
+            "type": "docDate",
             "indexed": true
         }
     ]
