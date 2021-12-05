@@ -83,8 +83,8 @@ def get_text_from_url(text_url):
     # print(soup)
     # if textEl != None: return textEl.get_text('\n').strip()
     txt = soup.get_text('\n').strip()
-    if txt.find("The requested document does not exist"): return None
-    while "\n\n\n" in txt: txt = txt.replace("\n\n\n", "\n\n")
+    if txt.find("The requested document does not exist") != -1: return None
+    # while "\n\n\n" in txt: txt = txt.replace("\n\n\n", "\n\n")
     return txt
 
 def urlencode(s):

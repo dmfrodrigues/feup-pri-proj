@@ -1,5 +1,7 @@
-data/**/*.json
-data/**/*.txt
-data/**/*.csv
+data/eurlex/*.json
+data/eurlex/*.txt
+data/eurlex/texts/*.txt
+data/eurlex/notexts/*.txt
+data/eurlex/*.csv
 *.zip
 .ipynb_checkpoints

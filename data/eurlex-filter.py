@@ -1,5 +1,10 @@
 import sys, csv
 
+"""
+for line in sys.stdin:
+    sys.stdout.write(line)
+"""
+
 r = csv.reader(sys.stdin)
 w = csv.writer(sys.stdout)
 
