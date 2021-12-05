@@ -84,7 +84,7 @@ def get_text_from_url(text_url):
     # if textEl != None: return textEl.get_text('\n').strip()
     txt = soup.get_text('\n').strip()
     if txt.find("The requested document does not exist"): return None
-    # while "\n\n\n" in txt: txt = txt.replace("\n\n\n", "\n\n")
+    while "\n\n\n" in txt: txt = txt.replace("\n\n\n", "\n\n")
     return txt
 
 def urlencode(s):
@@ -121,7 +121,7 @@ def get_text(entry):
         return None
     return None
 
-r = csv.reader(sys.stdin, quotechar="'")
+r = csv.reader(sys.stdin)
 columns = next(r)
 
 data = dict()

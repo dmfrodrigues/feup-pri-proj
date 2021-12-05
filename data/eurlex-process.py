@@ -48,7 +48,7 @@ columns = [
     "relationships"
 ]
 
-w = csv.writer(sys.stdout, quotechar="'")
+w = csv.writer(sys.stdout)
 w.writerow(columns)
 
 data = dict()

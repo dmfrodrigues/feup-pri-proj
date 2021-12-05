@@ -16,9 +16,9 @@ texts_file    = open(sys.argv[2], "r")
 
 keys = set([s.strip() for s in texts_file.readlines()])
 
-w = csv.writer(sys.stdout, quotechar="'")
+w = csv.writer(sys.stdout)
 
-r = csv.reader(filtered_file, quotechar="'")
+r = csv.reader(filtered_file)
 columns = next(r)
 celex_idx = columns.index("celex")
 columns.append("text")
@@ -33,7 +33,8 @@ for row in r:
         f = open(f"eurlex/texts/{pathencode(celex)}.txt", "r")
         s = f.read()
         f.close()
-        row.append(json.dumps(s))
+        while "\n\n\n" in s: s = s.replace("\n\n\n", "\n\n")
+        row.append(s)
         w.writerow(row)
     i += 1
 
