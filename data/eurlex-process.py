@@ -88,11 +88,11 @@ for key in input_data:
         
         "addressee": entry["addressee"],
 
-        "subject_matter": [v["subject_matter"] for v in entry["subject_matter"]],
-        "directory_codes": [v["directory_code"] for v in entry["directory_codes"]],
-        "eurovoc_descriptors": [v["eurovoc_descriptor"] for v in entry["eurovoc_descriptors"]],
-        "legal_basis": [v["legal_basis"] for v in entry["legal_basis"]],
-        "relationships": rels
+        "subject_matter":      list(dict.fromkeys([v["subject_matter"] for v in entry["subject_matter"]])),
+        "directory_codes":     list(dict.fromkeys([v["directory_code"] for v in entry["directory_codes"]])),
+        "eurovoc_descriptors": list(dict.fromkeys([v["eurovoc_descriptor"] for v in entry["eurovoc_descriptors"]])),
+        "legal_basis":         list(dict.fromkeys([v["legal_basis"] for v in entry["legal_basis"]])),
+        "relationships":       list(dict.fromkeys(rels))
     }
 
     if celex in data:
