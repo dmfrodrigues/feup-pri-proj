@@ -10,7 +10,8 @@
                 "filters":[
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SnowballPorterFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -20,7 +21,8 @@
                 "filters":[
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SnowballPorterFilterFactory"}
                 ]
             }
         },
@@ -67,7 +69,8 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.TrimFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SnowballPorterFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -78,7 +81,8 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.TrimFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SnowballPorterFilterFactory"}
                 ]
             }
         },
