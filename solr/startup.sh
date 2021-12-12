@@ -13,9 +13,16 @@ curl -X POST -H 'Content-type:application/json' \
     http://localhost:8983/solr/docs/schema
 
 # Populate collection
-curl 'http://localhost:8983/solr/docs/update/csv?commit=true&encapsulator="' \
-    --data-binary @/data/combined.csv \
+
+STARTTIME=$(date +%s)
+
+curl -X POST 'http://localhost:8983/solr/docs/update/csv?commit=true&encapsulator="' \
+    -T /data/combined.csv \
     -H 'Content-type:application/csv'
+
+ENDTIME=$(date +%s)
+echo "Upload csv: $(($ENDTIME - $STARTTIME)) seconds"
+
 
 sleep 2
 
