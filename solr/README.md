@@ -1,3 +1,3 @@
-- Index all relevant fields
+- [x] Index all relevant fields
 - See what fields to store as DocValue (probably just text)
-- Faceting with addressee, 
+- Faceting with addressee

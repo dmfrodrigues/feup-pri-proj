@@ -28,6 +28,7 @@
         {
             "name":"docAddressees",
             "class":"solr.TextField",
+            "multiValued": true,
             "indexAnalyzer":{
                 "tokenizer":{
                     "class":"solr.SimplePatternTokenizerFactory",
@@ -55,6 +56,7 @@
 
         {
             "name":"docList",
+            "multiValued": true,
             "class":"solr.TextField",
             "indexAnalyzer":{
                 "tokenizer":{
@@ -93,7 +95,9 @@
                 },
                 "filters":[
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.PatternReplaceFilterFactory", "pattern":"\n", "replacement":" "},
+                    {"class":"solr.StopFilterFactory", "words":"stopwords.txt", "ignoreCase":true}
                 ]
             },
             "queryAnalyzer":{
@@ -113,6 +117,7 @@
         }
         
     ],
+
     "add-field": [
         {
             "name": "title",
@@ -122,7 +127,7 @@
         {
             "name": "celex",
             "type": "docTitle",
-            "indexed": false
+            "indexed": true
         },
         {
             "name": "form",
@@ -162,12 +167,12 @@
         {
             "name": "directory_codes",
             "type": "docList",
-            "indexed": false
+            "indexed": true
         },
         {
             "name": "legal_basis",
             "type": "docList",
-            "indexed": false
+            "indexed": true
         },
         {
             "name": "relationships",
