@@ -42,7 +42,7 @@ def get_texts_parallel(entries, no_workers):
                 dt = now_time - self.start_time
                 size = self.queue.qsize()
                 dsize = size - self.start_size
-                if self.id == 0 and dsize < 0 and (-dsize)%1 == 0:
+                if self.id == 0 and dsize < 0 and (-dsize)%100 == 0:
                     dt1 = dt/(-dsize)
                     print("ETA {:.2f} seconds".format(dt1 * size), file=sys.stderr)
 

@@ -80,7 +80,7 @@ for key in input_data:
         "form": entry["form"],
         "date": entry["date_document"],
         
-        "title": (entry["title"] if entry["title"] != "\u00a0" else ""),
+        "title": entry["title"].replace(u'\u00A0', ' ').strip(),
         
         "oj_date": process_date(entry["oj_date"]),
         "of_effect": process_ofeffect_date(entry["of_effect"]),

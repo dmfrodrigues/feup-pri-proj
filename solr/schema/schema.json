@@ -1,6 +1,60 @@
 {
 	"add-field-type": [
         {
+            "name":"docId",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SnowballPorterFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SnowballPorterFilterFactory"}
+                ]
+            }
+        },
+        
+        {
+            "name":"docForm",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SnowballPorterFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SnowballPorterFilterFactory"}
+                ]
+            }
+        },
+
+        {
             "name":"docTitle",
             "class":"solr.TextField",
             "indexAnalyzer":{
@@ -69,8 +123,37 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.TrimFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.TrimFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            }
+        },
+
+        {
+            "name":"docListWords",
+            "multiValued": true,
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.SimplePatternTokenizerFactory",
+                    "pattern":"[^;]+"
+                },
+                "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
+                    {"class":"solr.TrimFilterFactory"},
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -82,7 +165,7 @@
                     {"class":"solr.TrimFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             }
         },
@@ -130,12 +213,12 @@
         },
         {
             "name": "celex",
-            "type": "docTitle",
+            "type": "docId",
             "indexed": true
         },
         {
             "name": "form",
-            "type": "docTitle",
+            "type": "docForm",
             "indexed": true
         },
         {
@@ -185,12 +268,12 @@
         },
         {
             "name": "subject_matter",
-            "type": "docList",
+            "type": "docListWords",
             "indexed": true
         },
         {
             "name": "eurovoc_descriptors",
-            "type": "docList",
+            "type": "docListWords",
             "indexed": true
         }
     ]

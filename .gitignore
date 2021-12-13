@@ -5,3 +5,4 @@ data/eurlex/notexts/*.txt
 data/eurlex/*.csv
 *.zip
 .ipynb_checkpoints
+exploration/*.svg
