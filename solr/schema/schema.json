@@ -10,8 +10,7 @@
                 "filters":[
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -21,8 +20,7 @@
                 "filters":[
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"}
                 ]
             }
         },
@@ -65,7 +63,7 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -76,7 +74,7 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             }
         },
@@ -94,7 +92,8 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.TrimFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -105,7 +104,8 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.TrimFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             }
         },
@@ -184,7 +184,8 @@
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
                     {"class":"solr.PatternReplaceFilterFactory", "pattern":"\n", "replacement":" "},
-                    {"class":"solr.StopFilterFactory", "words":"stopwords.txt", "ignoreCase":true}
+                    {"class":"solr.StopFilterFactory", "words":"stopwords.txt", "ignoreCase":true},
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -193,7 +194,8 @@
                 },
                 "filters":[
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             }
         },
