@@ -6,3 +6,5 @@ data/eurlex/*.csv
 *.zip
 .ipynb_checkpoints
 exploration/*.svg
+evaluation/*.txt
+evaluation/*.json
