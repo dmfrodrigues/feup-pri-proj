@@ -245,7 +245,7 @@
 
             docs = ids = Array.from(document.querySelectorAll('div#board > div')).map(el => el.id);
 
-            for(let n = 1; n < 20; ++n){
+            for(let n = 1; n <= docs.length; ++n){
                 retrieved = docs.slice(0, n);
                 not_retrieved = docs.filter(i => !retrieved.includes(i));
 
