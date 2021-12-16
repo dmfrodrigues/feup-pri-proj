@@ -8,3 +8,4 @@ data/eurlex/*.csv
 exploration/*.svg
 evaluation/*.txt
 evaluation/*.json
+evaluation/*.svg
