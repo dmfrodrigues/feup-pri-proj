@@ -1,0 +1,328 @@
+% Copyright (C) 2021-2022 Diogo Rodrigues
+% Distributed under the terms of license
+% Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+
+\documentclass[table]{beamer}
+% Encodings (to render letters with diacritics and special characters)
+\usepackage[utf8]{inputenc}
+% Language
+\usepackage[english]{babel}
+\usepackage{verbatim}
+
+\usepackage{multicol}
+
+\usepackage{setspace}
+
+% \usepackage[table]{xcolor} 
+
+\usepackage[]{siunitx}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\pdfstringdefDisableCommands{
+  \def\\{}
+  \def\texttt#1{<#1>}
+}
+
+\newcommand{\email}[1]{{\footnotesize\texttt{\href{mailto:#1}{#1}}}}
+
+\usepackage{caption}
+\DeclareCaptionFont{black}{\color{black}}
+\DeclareCaptionFormat{listing}{{\tiny \textbf{#1}#2#3}}
+\captionsetup[lstlisting]{format=listing,labelfont=black,textfont=black}
+\usepackage{subfigure}
+
+\usepackage{listings}
+\lstset{
+    frame=tb, % draw frame at top and bottom of the code
+    basewidth  = {0.5em,0.5em},
+    numbers=left, % display line numbers on the left
+    showstringspaces=false, % don't mark spaces in strings  
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red}, % string color
+	aboveskip=-0.2em,
+    belowskip=-0.2em,
+    basicstyle=\tiny
+}
+\lstset{literate=
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {Ã}{{\~A}}1 {ã}{{\~a}}1 {Õ}{{\~O}}1 {õ}{{\~o}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+}
+
+\usepackage{dirtree}
+
+\usepackage[style=british]{csquotes}
+
+\usepackage{tabularx}
+
+\usepackage{svg}
+\usepackage{graphicx}
+
+\graphicspath{{../img/}}
+ 
+%Information to be included in the title page:
+\AtBeginDocument{
+\title[European legislation]{Information Retrieval System for EU Legislation}
+\subtitle[Milestone 1]{Milestone 1 -- Dataset Preparation}
+\author[G74]{
+    \small
+    \begin{tabular}{l l}
+        \email{up201806429@edu.fe.up.pt} & Diogo Miguel Ferreira Rodrigues \\
+        \email{up201806613@edu.fe.up.pt} & João António Cardoso Vieira e Basto de Sousa \\
+        \email{up201806330@edu.fe.up.pt} & Rafael Soares Ribeiro \\
+    \end{tabular}
+}
+\institute[FEUP/PRI]{Faculty of Engineering of the University of Porto \\ M.EIC -- Information Processing and Retrieval (PRI)}
+\date[19/11/2021]{19th of November, 2021}
+}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Introduction}
+\framesubtitle{The European Union}
+
+\begin{minipage}{0.55\textwidth}
+\begin{itemize}
+    \item Economic and political union of 27 European countries
+    \item Preceded by
+    \begin{itemize}
+        \item European Community for Coal and Steel (1951)
+        \item European Economic Community (1958)
+    \end{itemize}
+\end{itemize}
+
+\begin{block}{Goals}
+    \begin{itemize}
+        \item Avoid a new world war
+        \item Promote peace and economic cooperation
+        \item Defend the \textit{European Values}: dignity, freedom, democracy, welfare, and \textbf{rule of law}
+    \end{itemize}
+\end{block}
+\end{minipage}%
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includesvg[width=40mm]{eu-flag}
+    
+    \vspace{2mm}
+    
+    \includesvg[width=45mm]{eu-map.svg}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Introduction}
+\framesubtitle{EU institutions}
+
+    \centering
+    \includegraphics[width=105mm]{eu-institutions.pdf}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Introduction}
+\framesubtitle{EU law}
+
+European legislation databases:
+\begin{itemize}
+    \item \textbf{EUR-Lex}: information of all the documents of the Official Journal of the EU starting in 1951.
+    \item \textbf{PreLex}: focuses on the decision-making process and law that has not been settled yet (e.g., drafts).
+    \item \textbf{OEIL}: database of the European Parliament, stores inter-institutional decision-making process in the EU from the point of view of the Parliament.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Dataset preparation}
+\framesubtitle{Metadata collection}
+
+\centering
+
+{\LARGE \texttt{api.epdb.eu}}
+
+\vspace{5mm}
+
+by
+
+\vspace{5mm}
+
+\includegraphics[width=80mm]{buhl-rasmussen}
+
+\vspace{10mm}
+
+(\SI{138911}{} entries --- \SI{387.8}{\mega\byte})
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Dataset preparation}
+\framesubtitle{Cleaning and filtering}
+
+\textbf{Cleaning}
+
+\begin{itemize}
+    \item Removed fields we were not interested in (\texttt{text\_url}, \texttt{doc\_id}, \texttt{api\_url}, \texttt{prelex\_relation}, \texttt{internal\_ref}, \texttt{additional\_info}).
+    \item Get CELEX identifier from \texttt{eurlex\_perma\_url}.
+    \item Converted from JSON to CSV:
+    \begin{itemize}
+        \item CSV can be read one line at a time (JSON cannot easily)
+        \item CSV not as flexible as JSON (not a big problem).
+        \item Lists encoded by joining items with semicolons (no items had semicolons).
+    \end{itemize}
+\end{itemize}
+
+\textbf{Filtering}
+
+Ready and in the pipeline, but currently does not filter out any entries.
+
+\vspace{4mm}
+
+\begin{center}
+(\SI{138911}{} entries --- \SI{60.6}{\mega\byte})
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Dataset preparation}
+\framesubtitle{Text collection}
+
+\centering
+\includesvg[width=80mm]{eurlex.svg}
+
+\vspace{5mm}
+
+\begin{center}
+(\SI{99903}{} entries --- \SI{1.31}{\giga\byte})
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Data model}
+
+\centering
+
+\includegraphics[width=90mm]{diagram-class-diagram.drawio.pdf}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Data exploration}
+\framesubtitle{Missing Values; Dates}
+
+\begin{minipage}{0.5\textwidth}
+\centering
+\begin{figure}[h]
+    \centering
+    % \includegraphics[height=.75\textheight]{missing-values-histogram.png}
+    { \scriptsize
+    \rowcolors{1}{blue!10}{white}
+    \begin{tabular}{l | rr}
+        \rowcolor{gray!40}
+        \textbf{Field} &  \textbf{Count} & \textbf{(\%)} \\ \hline
+        \texttt{celex               } &       0 &   0.00 \\
+        \texttt{form                } &       0 &   0.00 \\
+        \texttt{date                } &   1 615 &   1.61 \\
+        \texttt{title               } &       0 &   0.00 \\
+        \texttt{oj\_date            } &   1 971 &   1.97 \\
+        \texttt{of\_effect          } &  14 483 &  14.49 \\
+        \texttt{end\_validity       } &  17 398 &  17.41 \\
+        \texttt{addressee           } &  74 951 &  75.02 \\
+        \texttt{subject\_matter     } &  15 400 &  15.41 \\
+        \texttt{directory\_codes    } &  17 310 &  17.32 \\
+        \texttt{eurovoc\_descriptors} &  20 386 &  20.40 \\
+        \texttt{legal\_basis        } &   6 567 &   6.57 \\
+        \texttt{relationships       } &     869 &   0.86 \\
+        \texttt{text                } &       0 &   0.00 \\
+    \end{tabular}
+    }
+    \caption{Missing Values per Column}
+\end{figure} 
+\end{minipage}\hfill
+\begin{minipage}{0.5\textwidth}
+\begin{itemize}
+\item Plausible reasons for missing data: evolving metadata needs, human error, non-applicability of some fields in certain documents.
+\item \texttt{relationships} low missing data percentage: strong connection between EU legislation.
+\item Document dates range: \\ 24 Sep 1949 - 4 Oct 2013.
+\item Number of documents per year align with events such as future EU member states negotiations.
+\end{itemize}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Data exploration}
+\framesubtitle{Lists; Text fields}
+
+\begin{minipage}{0.5\textwidth}
+\centering
+\begin{figure}[h]
+    \centering
+    \includesvg[width=\linewidth]{text-length-histogram.svg}
+    \caption{Text field length histogram}
+\end{figure}
+\end{minipage}\hfill
+\begin{minipage}{0.5\textwidth}
+\begin{itemize}
+\item Top 3 Subject matters: common commercial policy, External relations, Agriculture
+\item Top 3 Eurovoc Descriptors: import, export refund, originating product
+\item Average number of relationships per document: 4.64
+\item Text fields (title and text itself) follow a log-normal distribution
+\end{itemize}
+\end{minipage}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Retrieval task examples}
+
+\begin{itemize}
+    \item Amends to Decision 1999/468/EC
+    \item Legislation related to Portugal
+    \item Most recent consolidated legislation on Agriculture
+    \item Competition-related documents in force
+    \item Data protection regulation after 2010
+    \item Legislation on import-export with Canada
+    \item Fishing quotas in the North Atlantic Sea
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusions}
+
+\begin{itemize}
+    \item All milestone goals were met
+    \item Large dataset with data as coherent and complete as possible
+    \item \SI{99903}{} entries, \SI{1.31}{\giga\byte} $\implies$ May be reduced for future deliveries
+\end{itemize}
+
+\end{frame}
+
+% \begin{frame}%[allowframebreaks]
+%   \scriptsize
+%   \frametitle{References}
+%   \setbeamertemplate{bibliography item}{\insertbiblabel}
+%   \bibliographystyle{acm}
+%   \bibliography{report}
+% \end{frame}
+
+\end{document}

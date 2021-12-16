@@ -1,0 +1,335 @@
+% Copyright (C) 2021-2022 Diogo Rodrigues
+% Distributed under the terms of license
+% Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+
+\documentclass[table]{beamer}
+% Encodings (to render letters with diacritics and special characters)
+\usepackage[utf8]{inputenc}
+% Language
+\usepackage[english]{babel}
+\usepackage{verbatim}
+
+\usepackage{multicol}
+
+\usepackage{setspace}
+
+% \usepackage[table]{xcolor} 
+
+\usepackage{multicol}
+
+\usepackage[]{siunitx}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\pdfstringdefDisableCommands{
+  \def\\{}
+  \def\texttt#1{<#1>}
+}
+
+\newcommand{\email}[1]{{\footnotesize\texttt{\href{mailto:#1}{#1}}}}
+
+\usepackage{caption}
+\DeclareCaptionFont{black}{\color{black}}
+\DeclareCaptionFormat{listing}{{\tiny \textbf{#1}#2#3}}
+\captionsetup[lstlisting]{format=listing,labelfont=black,textfont=black}
+\usepackage{subfigure}
+
+\usepackage{listings}
+% \lstset{
+%     frame=tb, % draw frame at top and bottom of the code
+%     basewidth  = {0.5em,0.5em},
+%     numbers=left, % display line numbers on the left
+%     showstringspaces=false, % don't mark spaces in strings  
+%     commentstyle=\color{green}, % comment color
+%     keywordstyle=\color{blue}, % keyword color
+%     stringstyle=\color{red}, % string color
+% 	aboveskip=-0.2em,
+%     belowskip=-0.2em,
+%     basicstyle=\tiny
+% }
+\lstset{
+    basicstyle=\ttfamily\tiny,
+    columns=fullflexible,
+    % frame=tb, % draw frame at top and bottom of the code
+    tabsize=2, % tab space width
+    % numbers=left, % display line numbers on the left
+    showstringspaces=true, % don't show spaces in strings
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red} % string color
+}
+\lstset{literate=
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {Ã}{{\~A}}1 {ã}{{\~a}}1 {Õ}{{\~O}}1 {õ}{{\~o}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+}
+
+\usepackage{dirtree}
+
+\usepackage[style=british]{csquotes}
+
+\usepackage{tabularx}
+
+\usepackage{svg}
+\usepackage{graphicx}
+
+\graphicspath{{../img}}
+ 
+%Information to be included in the title page:
+\AtBeginDocument{
+\title[European legislation]{Information Retrieval System for EU Legislation}
+\subtitle[Milestone 1]{Milestone 2 -- Information Retrieval}
+\author[G74]{
+    \small
+    \begin{tabular}{l l}
+        \email{up201806429@edu.fe.up.pt} & Diogo Miguel Ferreira Rodrigues \\
+        \email{up201806613@edu.fe.up.pt} & João António Cardoso Vieira e Basto de Sousa \\
+        \email{up201806330@edu.fe.up.pt} & Rafael Soares Ribeiro \\
+    \end{tabular}
+}
+\institute[FEUP/PRI]{Faculty of Engineering of the University of Porto \\ M.EIC -- Information Processing and Retrieval (PRI)}
+\date[19/11/2021]{17th of December, 2021}
+}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Data model}
+
+\centering
+
+\includegraphics[width=90mm]{diagram-class-diagram.drawio.pdf}
+
+\end{frame}
+
+\begin{frame}{Information retrieval tool}
+
+\begin{minipage}{1.0\textwidth}
+    \begin{figure}[ht]
+        \centering
+        \includesvg[width=0.6\linewidth]{solr.svg}
+    \end{figure}
+\end{minipage}
+
+\vspace{10mm}
+
+\centering
+Indexing data \& querying results
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Indexing}
+
+\begin{minipage}{0.49\textwidth}
+\tiny
+\vspace{-0.5em}
+\begin{verbatim}
+{
+  "name":"docText",
+  "class":"solr.TextField",
+  "large": true,
+  "stored": true,
+  "multiValued": false,
+  "indexAnalyzer":{
+    "tokenizer":{
+      "class":"solr.StandardTokenizerFactory"
+    },
+    "filters":[
+      {"class":"solr.ASCIIFoldingFilterFactory",
+        "preserveOriginal":true},
+      {"class":"solr.LowerCaseFilterFactory"},
+      {"class":"solr.PatternReplaceFilterFactory",
+        "pattern":"\n", "replacement":" "},
+      {"class":"solr.StopFilterFactory",
+        "words":"stopwords.txt", "ignoreCase":true},
+      {"class":"solr.KStemFilterFactory"}
+    ]
+  },
+  "queryAnalyzer":{
+    "tokenizer":{
+      "class":"solr.StandardTokenizerFactory"
+    },
+    "filters":[
+      {"class":"solr.ASCIIFoldingFilterFactory",
+        "preserveOriginal":true},
+      {"class":"solr.LowerCaseFilterFactory"},
+      {"class":"solr.KStemFilterFactory"}
+    ]
+  }
+}
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{0.49\textwidth}
+    \begin{itemize}
+        \item The schema specifies what attributes to index and how
+        \item Custom tokenizers can be specified for use at index and query-time
+        \item Custom filters can also be used on both phases
+    \end{itemize}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Queries}
+
+\begin{minipage}[t]{0.49\textwidth}
+\tiny
+\begin{itemize}
+    \itemsep0em
+    \item Amends to Decision 1999/468/EC \begin{verbatim}
+title:"1999/468/EC amend"~10^4
+text:"1999/468/EC amend"~10
+\end{verbatim}
+
+    \item Legislation related to Portugal \begin{verbatim}
+text:portugal
+title:portugal^4
+eurovoc_descriptors:portugal^8
+\end{verbatim}
+
+    \item Most recent consolidated legislation on Agriculture \begin{verbatim}
+text:agriculture
+title:agriculture^4
+eurovoc_descriptors:agriculture^8
+subject_matter:agriculture^8
+\end{verbatim}
+
+    \item Competition-related documents in force \begin{verbatim}
+text:competition
+title:competition^4
+eurovoc_descriptors:competition^8
+subject_matter:competition^8
+\end{verbatim} \\
+    Filters: \begin{verbatim}
+of_effect:[* TO NOW]
+end_validity:[NOW TO *]
+\end{verbatim}
+\end{itemize}
+\end{minipage} %
+\begin{minipage}[t]{0.49\textwidth}
+\tiny
+\begin{itemize}
+    \itemsep0em
+    \item Data protection regulation after 2010 \begin{verbatim}
+title:"data protection"^4~2
+eurovoc_descriptors:"data protection"^4~2
+text:"data protection"~2
+\end{verbatim} \\
+    Filters: \begin{verbatim}
+form:"regulation"
+date:["2010-01-01T00:00:00Z" TO *]
+\end{verbatim}
+    
+    \item Legislation on import-export with Canada \begin{verbatim}
+title:"import Canada"^2~5
+title:"export Canada"^2~5
+text:"import Canada"~10
+text:"export Canada"~10
+eurovoc_descriptors:"import"^4
+eurovoc_descriptors:"export"^4
+eurovoc_descriptors:"Canada"^4
+\end{verbatim} 
+
+    \item Fishing quotas in the North Atlantic Sea \begin{verbatim}
+title:"fishing"^2
+title:"quotas"^2
+title:"North Atlantic"^4~1
+text:"fishing"^2
+text:"quotas"^2
+text:"North Atlantic"^4~1
+eurovoc_descriptors:"fishing"^2
+eurovoc_descriptors:"quota"^2
+eurovoc_descriptors:"North Sea"^4~1
+\end{verbatim}
+\end{itemize}
+\end{minipage}%
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Result evaluation}
+
+\begin{minipage}{0.31\textwidth}
+\small
+Results are decent
+
+~
+
+Near-perfect: Q2, Q4, Q5 \\
+Awful: Q3 \\
+Reasonable: Q1, Q6, Q7
+
+~
+
+MAP: 0.68
+
+\begin{table}[ht]
+    \centering
+    \tiny
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{@{}l|r r r r@{}}
+        \textbf{Query}   & AvP  & P@10 & R@10 & F@10 \\ \hline
+        Query 1          & 0.50 & 0.40 & 0.57 & 0.47 \\
+        Query 2          & 0.85 & 0.80 & 0.10 & 0.17 \\
+        Query 3          & 0.30 & 0.40 & 0.13 & 0.20 \\
+        Query 4          & 1.00 & 1.00 & 0.10 & 0.18 \\
+        Query 5          & 0.55 & 0.50 & 0.50 & 0.50 \\
+        Query 6          & 0.93 & 1.00 & 0.14 & 0.25 \\
+        Query 7          & 0.60 & 0.70 & 0.12 & 0.21 \\
+    \end{tabular}
+\end{table}
+
+\end{minipage}
+\begin{minipage}{0.68\textwidth}
+    \begin{figure}[ht]
+        \centering
+        %\includesvg[width=\linewidth]{recall-precision.svg}
+        \includesvg[width=\linewidth]{recall-precision-interpolated.svg}
+    \end{figure}
+\end{minipage}
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Future work}
+
+    \begin{itemize}
+        \item \textbf{Use other query parsers} -- \textit{DisMax} and \textit{eDisMax}
+        \item \textbf{Related documents} -- making use of the \texttt{relationships} field
+        \item \textbf{Faceting} -- on fields with tag-like structure (e.g. directory\_codes) to group results
+        \item \textbf{Synonyms in queries} -- use of \textit{SynonymGraphFilter} in the query phase
+        \item \textbf{Date as scoring criteria} -- use both date and scores for ranking
+        \item \textbf{Page rating} -- algorithm implementation to improve results based on \textit{Specificity} (in a simplified way, documents with fewer topics rank higher) and \textit{Importance} (somewhat subjective metric, based on entity authority and/or number of documents where it is referenced)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusions}
+
+\begin{itemize}
+    \item All milestone goals were met
+    \item Large dataset with data as coherent and complete as possible
+    \item \SI{99903}{} entries, \SI{1.31}{\giga\byte}
+    \item Successfully indexed using Solr
+    \item Queries with decent quality based on performance measures
+\end{itemize}
+
+\end{frame}
+
+\end{document}

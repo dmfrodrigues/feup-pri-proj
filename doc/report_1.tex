@@ -2,7 +2,7 @@
 
 \usepackage{svg}
 \usepackage{hyperref}
-\usepackage[binary-units=true]{siunitx}
+\usepackage[]{siunitx}
 \PassOptionsToPackage{obeyspaces}{url}
 \usepackage{dblfloatfix}
 
@@ -12,9 +12,22 @@
 
 \urlstyle{tt}
 
+\settopmatter{printacmref=false}
+
+\graphicspath{{../img/}}
+
+\usepackage{currfile-abspath}
+
+\sisetup{group-separator = {\,}}
+
+\getmainfile % get real main file (can be different than jobname in some cases)
+\getabspath{\themainfile} % or use \jobname.tex instead (not as safe)
+\let\mainabsdir\theabsdir % save result away (macro will be overwritten by the next \getabspath
+\let\mainabspath\theabspath % save result away (macro will be overwritten by the next \getabspath
+
 \begin{document}
 
-\title{Information Retrieval System for European Union Legislation: Dataset Preparation}
+\title{Information Retrieval System for European Union Legislation}
 
 \author{Diogo Miguel F. Rodrigues}
 \email{up201806429@edu.fe.up.pt}
@@ -91,12 +104,12 @@ The European Union (EU) is an economic and political union of 27 member states o
 The Commission has the initiative for legislation, citizens are entitled to participate in the shaping of the EU legislation through the election of the European Parliament, and their respective state governments through the European Council, being the European Court of Justice responsible for enforcing EU law.
 
 EU law is a system of rules operating within the EU member states, and covers topics from Constitutional and Administrative Law to Freedom of Movement, Trade and Public Regulation, Natural Resource Management and Social Market Regulations.
-The three main European legislation databases are EUR-Lex, PreLex and OEIL. EUR-Lex contains information of all the documents of the Official Journal (OJ) of the EU starting at the year of 1951, PreLex has complete records starting at 1974 and it is an extension of EUR-Lex in the way that it has many of the same documents, but focuses on inter-institutional procedures and data concerning different stages in the decision-making process and law that has not been settled yet, meaning it is most likely to contain drafts of EU legislation. Lastly, OEIL is the database of the European Parliament and stores (similarly to Prelex) inter-institutional decision-making process in the EU but from the point of view of the Parliament.
+The three main European legislation databases are EUR-Lex, PreLex and OEIL. EUR-Lex contains information of all the documents of the Official Journal (OJ) of the EU starting at the year of 1951, PreLex has complete records starting at 1974 and is an extension of EUR-Lex that has many of the same documents, but focuses on inter-institutional procedures and data concerning different stages in the decision-making process and law that has not been settled yet, meaning it is most likely to contain drafts of EU legislation. Lastly, OEIL is the database of the European Parliament and stores inter-institutional decision-making in the EU but from the point of view of the Parliament.
 
 \section{Aspects of European legislation}
 
 \begin{figure*}[b]
-  \includegraphics[width=\textwidth]{img/diagram-pipeline.drawio}
+  \includegraphics[width=\textwidth]{diagram-pipeline.drawio}
   \caption{Data processing pipeline.}
 \end{figure*}
 
@@ -118,11 +131,9 @@ The subject matter authority table (AT) is a controlled vocabulary containing th
 
 \section{Dataset preparation}
 
-% All quantities of digital information used in this article are in the decimal system of multiple-byte units (i.e., $\SI{1000}{\byte}=\SI{1}{\kilo\byte}$, $\SI{1000}{\kilo\byte}=\SI{1}{\mega\byte}$, $\SI{1000}{\mega\byte}=\SI{1}{\giga\byte}$.
-
 \subsection{Metadata collection} \label{ssec:metadata-collection}
 
-The dataset selected for this project was the EUR-Lex database. By making use of the \url{api.epdb.eu} API (namely of the \url{api.epdb.eu/eurlex/document} endpoint), we extracted a list of 138911 document metadata entries, which we stored in file \texttt{raw.json}, using a non-minified (human-readable) JSON format, with a size of \SI{387.8}{\mega\byte}.
+The dataset selected for this project was the EUR-Lex database. By making use of the \url{api.epdb.eu} API (namely of the \url{api.epdb.eu/eurlex/document} endpoint), we extracted a list of \SI{138911}{} document metadata entries, which we stored in file \texttt{raw.json}, with a size of \SI{387.8}{\mega\byte}.
 
 For each document, the following fields were obtained:
 
@@ -140,7 +151,7 @@ For each document, the following fields were obtained:
     \item \texttt{legal\_basis}: List of EU legislation identifiers (mostly CELEX IDs) that forms the legal basis of the current document.
     \item \texttt{relationships}: List of relationships between this document and other EUR-Lex documents (amendments, legal basis, ...).
     
-    \item \texttt{eurlex\_perma\_link}: Permanent link of the document in the EUR-Lex website.
+    \item \texttt{eurlex\_perma\_url}: Permanent link of the document in the EUR-Lex website.
 
     \item \texttt{text\_url}: URL where document content is available.
 
@@ -155,10 +166,12 @@ For each document, the following fields were obtained:
 \label{ssec:data-cleaning}
 
 After obtaining the metadata, we parsed \texttt{eurlex\_perma\_url} to obtain the CELEX identifiers. We decided to use CELEX as the primary document identifier, due to its ubiquity and wide support by the EUR-Lex website.
-The following variables were not of interest for this project and were removed as such: \texttt{text\_url} (later on we used the CELEX to query the EUR-Lex website), \texttt{doc\_id}, \texttt{api\_url}, \texttt{prelex\_relation}, \texttt{internal\_ref} and \texttt{additional\_info}. We also renamed \texttt{date\_document} to \texttt{date}.
+The following variables were not of interest for this project and were removed: \texttt{text\_url} (later on we used the CELEX to query the EUR-Lex website), \texttt{doc\_id}, \texttt{api\_url}, \texttt{prelex\_relation}, \texttt{internal\_ref} and \texttt{additional\_info}. We also renamed \texttt{date\_document} to \texttt{date}.
 
 Finally, we converted the metadata to CSV format, which is more useful than JSON in pipelines, because JSON deserialization requires the whole file to be read at once, while CSV can be read one line at a time, although it is not as flexible as JSON. We encoded list fields (\texttt{subject\_matter}, \texttt{directory\_codes} and \texttt{eurovoc\_descriptors}) by joining list items with semicolons, after concluding that none of those fields' items contained semicolons.
-The 138911 processed entries were stored in \texttt{processed.csv} (\SI{63.2}{\mega\byte})
+The \SI{138911}{} processed entries were stored in \texttt{processed.csv} (\SI{60.6}{\mega\byte})
+
+After exploring the \texttt{addressee} field, we concluded that the \url{api.epdb.eu} API truncated the \texttt{addressee} field to 255 characters. We nevertheless decided to keep this field, as although it has incomplete information, it may still be valuable data.
 
 \subsection{Data filtering}
 
@@ -166,24 +179,24 @@ The additional data filtering step was defined to allow the flexibility required
 
 \subsection{Text collection}
 
-Using the CELEX identifiers from \texttt{filtered.csv}, we constructed URLs with format \path{https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:<}CELEX identifier\texttt{>} to retrieve document contents in HTML format (with the HTML files mostly containing only the document contents, or otherwise some headers). HTTP requests were made to the EUR-Lex website using the Python3 library \texttt{urllib}, and the HTML files were converted to plain text by removing all HTML tags with library \texttt{BeaufitulSoup}.
+Using the CELEX identifiers from \texttt{filtered.csv}, we constructed URLs with format \path{https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:<}CELEX identifier\texttt{>} to retrieve document contents in HTML format, with the HTML files mostly containing only the document contents, or otherwise some headers. HTTP requests were made to the EUR-Lex website using the Python3 library \texttt{urllib} \cite{urllib}, and the HTML files were converted to plain text by removing all HTML tags with library \texttt{BeaufitulSoup} \cite{beautifulsoup}.
 
-For some documents we were not able to retrieve their contents using the abovementioned URLs. Most such documents did not have a version in English, or instead had a PDF version and no  HTML version. We decided not to handle those files because the vast majority of the 138911 files from previous steps had an HTML version in English, and having to consider documents in other languages or parse PDF files would add another layer of complexity when we already had more than enough data for this project.
+For some documents we were not able to retrieve their contents using the abovementioned URLs. Most such documents did not have a version in English, or instead had a PDF version and no  HTML version. We decided not to handle those files because the vast majority of the \SI{138911}{} files from previous steps had an HTML version in English, and having to consider documents in other languages or parse PDF files would add another layer of complexity when we already had more than enough data for this project.
 
-Each document's contents was stored in a separate \textit{.txt} file named \texttt{texts/<}CELEX identifier\texttt{>.txt}. A complete list of documents for which contents were retrieved is available at \texttt{texts.txt}, one CELEX identifier per line (this file is essentially equivalent to listing all files in directory \texttt{texts} without their extensions). Out of the 138911 documents we knew of from previous data processing steps, we were able to find text for 99903 ($71.92\%$). The file \texttt{texts.txt} has a size of \SI{1.2}{\mega\byte}, and the total size of the \texttt{texts/} folder containing all document texts we could obtain is \SI{1.4}{\giga\byte}.
+Each document's contents was stored in a separate \textit{.txt} file named \texttt{texts/<}CELEX identifier\texttt{>.txt}. A complete list of documents for which contents were retrieved is available at \texttt{texts.txt}, one CELEX identifier per line (this file is essentially equivalent to listing all files in directory \texttt{texts} without their extensions). Out of the \SI{138911}{} documents we knew of from previous data processing steps, we were able to find text for \SI{99903}{} ($71.92\%$). The file \texttt{texts.txt} has a size of \SI{1.2}{\mega\byte}, and the total size of the \texttt{texts/} folder containing all document texts we could obtain is \SI{1.55}{\giga\byte}.
 
 \subsection{Data enrichment}
 
-Finally, we combined the document metadata from \texttt{filtered.csv} with the document contents in \texttt{texts/}, keeping only the documents for which we were able to obtain contents. The result of this operation was stored in \texttt{combined.csv}, with 99903 entries and a size of \SI{1.6}{\giga\byte}.
+Finally, we processed the text files to remove newlines in cases where there were three or more sequential newlines, and combined the document metadata from \texttt{filtered.csv} with the document contents in \texttt{texts/}, keeping only the documents for which we were able to obtain contents. The result of this operation was stored in \texttt{combined.csv}, with \SI{99903}{} entries and a size of \SI{1.31}{\giga\byte}.
 
 \section{Dataset fields}
 \label{sec:dataset-fields}
 
-After completing all steps of data preparation, we obtained a dataset \texttt{combined.csv} with 99903 entries and a size of \SI{1.6}{\giga\byte}. It has the fields described in Table \ref{tab:fields}.
+After completing all steps of data preparation, we obtained a dataset \texttt{combined.csv} with \SI{99903}{} entries and a size of \SI{1.31}{\giga\byte}. It has the fields described in Table \ref{tab:fields}.
 The class diagram for the dataset is presented in Figure \ref{fig:class-diagram}.
 Dates are represented in the format \texttt{YYYY-MM-DD}, and each date field is zero-padded when needed.
 
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \caption{Fields of the final dataset.} \label{tab:fields}
     \begin{tabular}{@{}l|c|l@{}}
@@ -206,7 +219,7 @@ Dates are represented in the format \texttt{YYYY-MM-DD}, and each date field is 
 \end{table}
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/diagram-class-diagram.drawio}
+  \includegraphics[width=\linewidth]{diagram-class-diagram.drawio}
   \caption{Class diagram for conceptual model.}
   \label{fig:class-diagram}
 \end{figure}
@@ -218,68 +231,64 @@ Data exploration was performed to assert information like common keywords, form 
 
 Missing data can be caused by a variety of factors, but it is mostly associated to human error and the evolving metadata needs, which means certain older documents have empty fields, probably because at the time the database did not have all the fields it currently does.
 
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \caption{Missing values per field.} \label{tab:missing}
     \begin{tabular}{@{}l|r|r@{}}
         \textbf{Field}              & \textbf{Missing}& \textbf{\%} \\ \hline
-        \texttt{date}                   & 1615            & 1.62                    \\
+        \texttt{date}                   & 1 615            & 1.62                    \\
         \texttt{title}                  & 0               & 0.00                    \\
-        \texttt{oj\_date}               & 1971            & 1.97                    \\
-        \texttt{of\_effect}             & 14483           & 14.50                   \\
-        \texttt{end\_validity}          & 17398           & 17.41                   \\
-        \texttt{addressee}              & 74951           & 75.02                   \\
-        \texttt{subject\_matter}        & 15400           & 15.41                   \\
-        \texttt{directory\_codes}       & 17310           & 17.33                   \\
-        \texttt{eurovoc\_descriptors}   & 20386           & 20.41                   \\
-        \texttt{legal\_basis}           & 6567            & 6.57                    \\
+        \texttt{oj\_date}               & 1 971            & 1.97                    \\
+        \texttt{of\_effect}             & 14 483           & 14.50                   \\
+        \texttt{end\_validity}          & 17 398           & 17.41                   \\
+        \texttt{addressee}              & 74 951           & 75.02                   \\
+        \texttt{subject\_matter}        & 15 400           & 15.41                   \\
+        \texttt{directory\_codes}       & 17 310           & 17.33                   \\
+        \texttt{eurovoc\_descriptors}   & 20 386           & 20.41                   \\
+        \texttt{legal\_basis}           & 6 567            & 6.57                    \\
         \texttt{relationships}          & 869             & 0.87                    \\
     \end{tabular}
 \end{table}
 
 \texttt{addressee} was found to be the column by far with the highest missing data percentage at 75.02\%, Table \ref{tab:missing}. This lack of data might be due to the fact that most documents are general European law, and as such are directed at all member states that are part of the EU, regardless of EU membership at the time of publishing.
 
-Column \texttt{end\_validity} has 17.41\% missing elements, which may be due to factors such as the indefinite validity of a document. The list columns \texttt{subject\_matter}, \texttt{directory\_codes} and \texttt{eurovoc\_descriptors} range from 15.41\% to 20.41\% missing elements which may be due to the mere absence of list items (e.g., there are no EuroVoc terms associated to the document due to its nature), or due to human error when inputting records in the database, information loss or non-applicability of some fields in certain documents.\par
+Column \texttt{end\_validity} has 17.41\% missing elements, which may be due to the indefinite validity of a document. The list columns \texttt{subject\_matter}, \texttt{directory\_codes} and \texttt{eurovoc\_descriptors} range from 15.41\% to 20.41\% missing elements which may be due to the mere absence of list items (e.g., there are no EuroVoc terms associated to the document due to its nature), or due to human error when inputting records in the database, information loss or non-applicability of some fields in certain documents.\par
 
-An interesting observation is that \texttt{relationships} is not present only in 0.87\% of the entries, Table \ref{tab:missing}, revealing the strong connection that exist between the vast majority of EU legislation: laws that replace, complement or build upon older ones.
+An interesting observation is that \texttt{relationships} is not present only in 0.87\% of the entries, revealing the strong connection between the vast majority of EU legislation: laws that replace, complement or build upon older ones.
 
 \subsection{Dates}
 
-Document dates range from 24 Sep 1949 to 4 Oct 2013. \texttt{oj\_date} and \texttt{of\_effect} distributions are very similar to \texttt{date}, increasing exponentially until 1981 (second EU enlargement). In the 1981-2001 period the number of documents per year grew slowly, until late 2000 when the Nice European Council decided to speed up accession negotiations with the 12 countries that would later join the EU in 2004, causing the number of documents signed in 2001 to increase by almost $60\%$ when compared with 2000. 
-This number has stayed somewhat stable and even decreased since 2002. \texttt{end\_validity} values range from 7 Jan 1954 to 31 Dec 2058, with the exception of 34833 documents that have as expiration date 1 Jan 2100, which we interpret as the document not expiring.
+Document dates range from 24 Sep 1949 to 4 Oct 2013. \texttt{oj\_date} and \texttt{of\_effect} distributions are very similar to \texttt{date}, increasing until 1981 (second EU enlargement). In the 1981-2001 period the number of documents per year grew slowly, until late 2000 when the Nice European Council decided to speed up accession negotiations with the 12 countries that would later join the EU in 2004, causing the number of documents signed in 2001 to increase by almost $60\%$ when compared with 2000. 
+This number has stayed somewhat stable and even decreased since 2002. \texttt{end\_validity} values range from 7 Jan 1954 to 31 Dec 2058, with the exception of \SI{34833}{} documents that have as expiration date 1 Jan 2100, which we interpret as the document not expiring.
 
 \begin{figure}[H]
-  \includegraphics[width=\linewidth]{img/date-histogram.png}
+  \includesvg[width=\linewidth]{date-histogram.svg}
   \caption{Date histogram.}
 \end{figure}
 
 \subsection{Lists}
 
-The dataset has 249 unique subject matters, being 'common commercial policy' the one with the highest frequency appearing 11961 times, followed by 'External relations' (10478) and 'Agriculture' (8943).
-The dataset uses 5204 unique EuroVoc descriptors, with the most frequent being 'import'  (5871), 'export refund' (4785) and 'originating product' (3837).
+The dataset has 249 unique subject matters, being ``common commercial policy'' the one with the highest frequency appearing \SI{11961}{} times, followed by ``External relations'' (\SI{10478}{}) and ``Agriculture'' (\SI{8943}{}).
+The dataset uses \SI{5204}{} unique EuroVoc descriptors, with the most frequent being ``import''  (\SI{5871}{}), ``export refund'' (\SI{4785}{}) and ``originating product'' (\SI{3837}{}).
 Each document is related to an average of 5.93 other documents. The documents most referred to are \texttt{32007R1234} (regulation on the common organisation of agricultural markets), \texttt{21994A0103(74)} (\textit{Agreement on the European Economic Area}) and \texttt{11957E113} (\textit{Treaty establishing the European Economic Community}).
 
 \subsection{Text fields}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \begin{minipage}[t]{0.5\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{img/title-length-histogram.png}
+        \includesvg[width=\linewidth]{title-length-histogram.svg}
     \end{minipage}%
     \begin{minipage}[t]{0.5\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{img/text-length-histogram.png}
+        \includesvg[width=\linewidth]{text-length-histogram.svg}
     \end{minipage}
     \caption{Text fields length histograms.}
 \end{figure}
 
-Title length varies between 6 and 1531 characters, with an average length of 216.3 characters. The title length approximately follows a log-normal distribution, since it is mostly left-skewed and its tail (to the right) tends to get smaller quite slowly.
+Title length varies between 6 and \SI{1531}{} characters, with an average length of 216.3 characters. The title length approximately follows a log-normal distribution, since it is mostly left-skewed and its tail (to the right) tends to get smaller quite slowly.
 Text length is between 300 and 6.3M characters, with an average length of 15288.3 characters. It presents a distribution similar to \texttt{title}.
-
-\section{Data limitations}
-
-After exploring the \texttt{addressee} field, we concluded that the \url{api.epdb.eu} API truncated the \texttt{addressee} field to 255 characters. We nevertheless decided to keep this field, as although it has incomplete information, it may still be valuable data.
 
 \section{Retrieval tasks}
 \label{sec:retrieval tasks}
@@ -301,14 +310,12 @@ Here we present some of the information needs we expect to meet at a later stage
 
 \section{Conclusion}
 
-The fundamental goals of this project milestone were to search and select relevant datasets, perform data exploration analysis, assess the datasets' quality, characterize its fields and identify information needs for the system to be developed.
-These goals were met by the following sections respectively: \ref{ssec:metadata-collection}, \ref{sec:data-exploration}, \ref{ssec:data-cleaning}, \ref{sec:dataset-fields} and \ref{sec:retrieval tasks}.
+The fundamental goals of this project were to search and select relevant datasets, perform data exploration analysis, assess the datasets' quality, characterize its fields and identify information needs for the system to be developed.
 
-At the end of the first milestone, we obtained a large dataset with data as coherent and complete as possible for the subset of documents we chose to analyse.
+We obtained a large dataset with data as coherent and complete as possible for the subset of documents we chose to analyse.
 
 \bibliographystyle{ACM-Reference-Format}
-\bibliography{bibliography-file}
-% \bibliography{sample-base, bibliography-file}
+\bibliography{\mainabsdir/../bib/bibliography-file.bib}
 
 \end{document}
 \endinput
