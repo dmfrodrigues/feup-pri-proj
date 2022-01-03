@@ -14,8 +14,11 @@ eurlex/combined.csv: eurlex/filtered.csv eurlex/texts.txt eurlex-combine.py
 eurlex/texts.txt: eurlex/filtered.csv eurlex-get-texts.py | eurlex/texts eurlex/notexts
 	python3 eurlex-get-texts.py < $< > $@
 
-eurlex/filtered.csv: eurlex/processed.csv eurlex-filter.py
+eurlex/filtered.csv: eurlex/ranked.csv eurlex-filter.py
 	python3 eurlex-filter.py < $< > $@
+
+eurlex/ranked.csv: eurlex/processed.csv eurlex-pagerank.py
+	python3 eurlex-pagerank.py < $< > $@
 
 eurlex/processed.csv: eurlex/raw.json eurlex-process.py
 	python3 eurlex-process.py < $< > $@
