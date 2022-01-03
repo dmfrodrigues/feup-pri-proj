@@ -1,6 +1,9 @@
 .DELETE_ON_ERROR:
 
-all: eurlex/combined.csv
+all: ../solr/data/combined.csv
+
+../solr/data/combined.csv: eurlex/combined.csv
+	cp $< $@
 
 eurlex/final.js: eurlex/combined.csv eurlex-csv2json.py
 	python3 eurlex-csv2json.py < $< > $@

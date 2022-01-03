@@ -42,7 +42,7 @@ def get_texts_parallel(entries, no_workers):
                 dt = now_time - self.start_time
                 size = self.queue.qsize()
                 dsize = size - self.start_size
-                if self.id == 0 and dsize < 0 and (-dsize)%1 == 0:
+                if self.id == 0 and dsize < 0 and (-dsize)%100 == 0:
                     dt1 = dt/(-dsize)
                     print("ETA {:.2f} seconds".format(dt1 * size), file=sys.stderr)
 
@@ -83,7 +83,7 @@ def get_text_from_url(text_url):
     # print(soup)
     # if textEl != None: return textEl.get_text('\n').strip()
     txt = soup.get_text('\n').strip()
-    if txt.find("The requested document does not exist"): return None
+    if txt.find("The requested document does not exist") != -1: return None
     # while "\n\n\n" in txt: txt = txt.replace("\n\n\n", "\n\n")
     return txt
 
@@ -121,7 +121,7 @@ def get_text(entry):
         return None
     return None
 
-r = csv.reader(sys.stdin, quotechar="'")
+r = csv.reader(sys.stdin)
 columns = next(r)
 
 data = dict()
