@@ -5,6 +5,9 @@ all: ../solr/data/combined.csv
 ../solr/data/combined.csv: eurlex/combined.csv
 	cp $< $@
 
+eurlex/final.js: eurlex/combined.csv eurlex-csv2json.py
+	python3 eurlex-csv2json.py < $< > $@
+
 eurlex/combined.csv: eurlex/filtered.csv eurlex/texts.txt eurlex-combine.py
 	python3 eurlex-combine.py eurlex/filtered.csv eurlex/texts.txt > $@
 
