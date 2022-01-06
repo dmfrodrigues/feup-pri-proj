@@ -36,7 +36,7 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -47,7 +47,7 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             }
         },
