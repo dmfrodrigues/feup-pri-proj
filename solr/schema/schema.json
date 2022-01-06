@@ -203,6 +203,11 @@
         {
             "name":"docDate",
             "class":"solr.DatePointField"
+        },
+
+        {
+            "name":"docFloat",
+            "class":"solr.FloatPointField"
         }
         
     ],
@@ -276,6 +281,11 @@
         {
             "name": "eurovoc_descriptors",
             "type": "docListWords",
+            "indexed": true
+        },
+        {
+            "name": "rank",
+            "type": "docFloat",
             "indexed": true
         }
     ]
