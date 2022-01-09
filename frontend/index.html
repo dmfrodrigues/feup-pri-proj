@@ -104,33 +104,64 @@
         }
 
         #pagination a:hover:not(.active) {background-color: #ddd;}
+
+        #faceting {
+            padding-left: 10px;
+            width: 200px; /* Set the width of the sidebar */
+            height: 100%;
+            position: absolute; /* Fixed Sidebar (stay in place on scroll) */
+            z-index: 1; /* Stay on top */
+            top: 0; /* Stay at the top */
+            left: 0;
+            background-color: rgb(24, 24, 24);
+            overflow-x: hidden; /* Disable horizontal scroll */
+            padding-top: 20px;
+        }
+        #faceting label {
+            float: left
+        }
+
+        #main {
+            margin-left: 210px;
+        }
     </style>
 </head>
 <body>
-    <div id="search">
-        <input placeholder="Search.." name="search" id="search-text">
-        <button onclick="return runQuery()">Seach</button>
-    </div>
-    <div id="pagination">
-    </div>
-    <div id="board">
+    <form onsubmit="runQuery(0, this.faceting); return false" id="faceting">
+        <label>Faceting</label><input type="submit" value="Apply"><br><br>
+        <input type="checkbox" name="faceting" value="addressee">Addressee<br>
+        <input type="checkbox" name="faceting" value="eurovoc_descriptors">Eurovoc Descriptors<br>
+        <input type="checkbox" name="faceting" value="subject_matter">Subject Matter<br>
+        <input type="checkbox" name="faceting" value="legal_basis">Legal Basis<br>
+    </form>
+    <div id="main">
+        <div id="search">
+            <input placeholder="Search.." name="search" id="search-text">
+            <button onclick="return runQuery()">Seach</button>
+        </div>
+        <div id="pagination">
+        </div>
+        <div id="board">
+        </div>
     </div>
 
     <script type="application/javascript">
-        function runQuery(page = 0){
+        function runQuery(page = 0, facet_checkboxes = getFacetCheckboxes()){
             let text = document.getElementById('search-text').value
             let query = "http://localhost:8983/solr/docs/query?" +
                 "defType=dismax" + 
                 "&qf='title^5 eurovoc_descriptors^5 subject_matter^5 text'" + 
                 "&q=" + text +
-                "&facet=true&facet.field=" + ""
+                facetQuery(facet_checkboxes) + 
                 "&start=" + page*10
             
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.onreadystatechange = function() {
                 if (xmlHttp.readyState != 4 || xmlHttp.status != 200) return
 
+                // console.log(query)
                 console.log(xmlHttp.response)
+
                 updatePagination(xmlHttp.response)
                 updateBoardData(xmlHttp.response, page)
             }
@@ -157,6 +188,22 @@
             }
         }
 
+        function getFacetCheckboxes(){
+            return document.getElementById('faceting').faceting
+        }
+
+        function facetQuery(facet_checkboxes){
+            if (facet_checkboxes.length == 0) return ""
+            let result = "&facet=true"
+            
+            for (let checkbox of facet_checkboxes){
+                if (checkbox.checked)
+                result += "&facet.field=" + checkbox.defaultValue
+            }
+
+            return result
+        }
+
         function updateBoardData(dataObj, page){
             const board = document.getElementById('board');
             board.innerHTML = '';
@@ -168,7 +215,7 @@
                 const div = document.createElement('div');
                 div.classList = "doc-div";
                 div.id = doc.celex;
-                console.log(doc.celex);
+                // console.log(doc.celex);
                 div.innerHTML = `
                     <details>
                         <summary>
