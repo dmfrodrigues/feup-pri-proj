@@ -123,6 +123,7 @@
                 "defType=dismax" + 
                 "&qf='title^5 eurovoc_descriptors^5 subject_matter^5 text'" + 
                 "&q=" + text +
+                "&facet=true&facet.field=" + ""
                 "&start=" + page*10
             
             var xmlHttp = new XMLHttpRequest();
