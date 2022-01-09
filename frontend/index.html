@@ -1,0 +1,201 @@
+<html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+    <style>
+        html {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        body {
+            width: 1500px;
+            margin: auto;
+        }
+
+        textarea  {
+            display: block;
+            border: 1px solid gray;
+            margin: 10 0 10 0;
+            padding: 5px;
+            width:100%;
+            height: 10pc;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+        }
+
+        #files-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto;
+            margin: 20px 0 0 0;
+        }
+        #files-container > div {
+            padding: 10px;
+        }
+        #files-container > div:first-child {
+            border-right: 1px solid grey;
+        }
+        #files-container h2 {
+            margin-top: 0;
+        }
+
+        pre {
+            font-family: inherit;
+            white-space: pre-wrap;
+        }
+
+        details {
+            font-size: 12px;
+            margin: 0 0 10px 0;
+            padding: 10px;
+            border: 1px solid grey;
+        }
+        details table {
+            font-size: 12px;
+        }
+        details table th {
+            text-align: left;
+            padding: 0 10px 0 0;
+        }
+
+        summary {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 0 0 10px 0;
+        }
+
+        #board, #search, #pagination {
+            margin: 20px 0 0 0;
+            padding: 0 10px 0 10px;
+        }
+
+        .doc-div {
+            display: grid;
+            grid-template-columns: auto 40px;
+            grid-template-rows: auto;
+            align-items: start;
+        }
+        .doc-div input {
+            width:  30px;
+            height: 30px;
+        }
+
+        #results-table table, #results-table table th, #results-table table td {
+            border: 1px solid grey;
+            border-collapse: collapse;
+        }
+        #results-table table td {
+            padding: 2px 10px 2px 10px;
+        }
+
+        #pagination {
+            display: inline-block;
+        }
+        #pagination a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+        }
+        #pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #pagination a:hover:not(.active) {background-color: #ddd;}
+    </style>
+</head>
+<body>
+    <div id="search">
+        <input placeholder="Search.." name="search" id="search-text">
+        <button onclick="return runQuery()">Seach</button>
+    </div>
+    <div id="pagination">
+    </div>
+    <div id="board">
+    </div>
+
+    <script type="application/javascript">
+        function runQuery(page = 0){
+            let text = document.getElementById('search-text').value
+            let query = "http://localhost:8983/solr/docs/query?" +
+                "defType=dismax" + 
+                "&qf='title^5 eurovoc_descriptors^5 subject_matter^5 text'" + 
+                "&q=" + text +
+                "&start=" + page*10
+            
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState != 4 || xmlHttp.status != 200) return
+
+                console.log(xmlHttp.response)
+                updatePagination(xmlHttp.response)
+                updateBoardData(xmlHttp.response, page)
+            }
+            xmlHttp.responseType = 'json';
+            xmlHttp.open( "GET", query, true );
+            xmlHttp.send( null );
+        }
+    
+        document.getElementById('search-text').addEventListener('keyup', event => {
+            if(event.key !== "Enter") return;
+            runQuery();
+        })
+
+        function updatePagination(dataObj){
+            let div = document.getElementById('pagination')
+            div.innerHTML = ''
+
+            let nPages = Math.ceil(dataObj.response.numFound / 10)
+            for (let i = 1 ; i <= Math.min(nPages, 5) ; i++){
+                let newPage = document.createElement('a')
+                newPage.setAttribute('onclick', `runQuery(${i-1})`)
+                newPage.innerHTML = i
+                div.appendChild(newPage)
+            }
+        }
+
+        function updateBoardData(dataObj, page){
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+
+            const docs = dataObj.response.docs;
+            
+            let i = 1;
+            for(const doc of docs){
+                const div = document.createElement('div');
+                div.classList = "doc-div";
+                div.id = doc.celex;
+                console.log(doc.celex);
+                div.innerHTML = `
+                    <details>
+                        <summary>
+                            <tt>[${i + 10*page}] ${doc.celex}</tt>: <i>${doc.title}</i>
+                        </summary>
+                        <table>
+                            <tr><th>Date</th><td>${doc["date"]}</td></tr>
+                            <tr><th>OJ date</th><td>${doc["oj_date"]}</td></tr>
+                            <tr><th>Of effect</th><td>${doc["of_effect"]}</td></tr>
+                            <tr><th>End validity</th><td>${doc["end_validity"]}</td></tr>
+                            <tr><th>Subject matter</th><td>${doc.subject_matter != undefined ? doc.subject_matter[0].split(';').join(' | ') : ""}</td></tr>
+                            <tr><th>Directory codes</th><td>${doc.directory_codes != undefined ? doc.directory_codes[0].split(';').join(' | ') : ""}</td></tr>
+                            <tr><th>EuroVoc descriptors</th><td>${doc.eurovoc_descriptors != undefined ? doc.eurovoc_descriptors[0].split(';').join(' | ') : ""}</td></tr>
+                            <tr><th>Legal basis</th><td>${doc.legal_basis != undefined ? doc.legal_basis[0].split(';').join(' | ') : ""}</td></tr>
+                            <tr><th>Relationships</th><td>${doc.relationships != undefined ? doc.relationships[0].split(';').join(' | ') : ""}</td></tr>
+                        </table>
+
+                        <pre>${doc.text}</pre>
+                    </details>
+                `;
+                board.appendChild(div);
+
+                i += 1;
+            }
+        }
+
+        var relevant;
+        
+    </script>
+</body>
+</html>
