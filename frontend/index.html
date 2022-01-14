@@ -205,8 +205,8 @@
             xmlHttp.onreadystatechange = function() {
                 if (xmlHttp.readyState != 4 || xmlHttp.status != 200) return
 
-                console.log(query)
-                console.log(xmlHttp.response)
+                // console.log(query)
+                // console.log(xmlHttp.response)
 
                 updatePagination(xmlHttp.response)
                 updateFacetingResults(xmlHttp.response)
