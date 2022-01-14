@@ -1,9 +1,16 @@
 version: '3.7'
 
 services:
-  mieic_solr:
-    image: mieic_solr
+  pri_solr:
     build: solr
     ports:
       - "8983:8983"
 
+  pri_web:
+    image: php:7.4-apache
+    depends_on:
+      - pri_solr
+    volumes:
+      - ./frontend:/var/www/html
+    ports:
+      - 8000:80
