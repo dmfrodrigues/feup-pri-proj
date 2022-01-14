@@ -108,6 +108,8 @@
             left: 0;
             background-color: rgb(24, 24, 24);
             overflow-x: hidden; /* Disable horizontal scroll */
+        }
+        #faceting-container > *:first-child{
             padding-top: 20px;
         }
         #faceting label {
@@ -115,7 +117,14 @@
         }
 
         /* Faceting results tabs */
+        #faceting-results-tab{
+            overflow: auto;
+            height: 800px;
+        }
         .tab {
+            position: sticky;
+            position: -webkit-sticky;
+            top: 0; /* required */
             overflow: hidden;
             border: 1px solid #ccc;
             background-color: #f1f1f1;
@@ -138,8 +147,6 @@
         .tabcontent {
             display: none;
             padding: 0px 26px 6px;
-            border: 1px solid #ccc;
-            border-top: none;
         }
         .tabcontent li{
             cursor: pointer;
@@ -236,8 +243,7 @@
 
             let result = 
                 "&facet=true" +
-                "&facet.sort=count" +
-                "&facet.limit=" + 10
+                "&facet.sort=count"
             
             for (let checkbox of facet_checkboxes){
                 if (checkbox.checked)
@@ -265,9 +271,6 @@
                 let newContent = document.createElement('ul')
                 newContent.id = field
                 newContent.className = "tabcontent"
-                let newContentTitle = document.createElement('h4')
-                newContentTitle.innerHTML = field
-                newContent.appendChild(newContentTitle)
 
                 i = -1
                 let newEntry
