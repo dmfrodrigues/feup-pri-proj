@@ -9,7 +9,6 @@
         }
 
         body {
-            width: 1500px;
             margin: auto;
         }
 
@@ -202,7 +201,7 @@
                 faceting_filter +
                 "&start=" + page*10
             
-            var xmlHttp = new XMLHttpRequest();
+            var xmlHttp = new XMLHttpRequest()
             xmlHttp.onreadystatechange = function() {
                 if (xmlHttp.readyState != 4 || xmlHttp.status != 200) return
 
@@ -223,7 +222,7 @@
             div.innerHTML = ''
 
             let nPages = Math.ceil(dataObj.response.numFound / 10)
-            for (let i = 1 ; i <= Math.min(nPages, 5) ; i++){
+            for (let i = 1 ; i <= Math.min(nPages, 20) ; i++){
                 let newPage = document.createElement('a')
                 newPage.setAttribute('onclick', `runQuery(${i-1})`)
                 newPage.innerHTML = i
