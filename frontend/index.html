@@ -437,13 +437,6 @@
                 `
                 div.getElementsByTagName("title")[0].remove()
                 
-                const body = div.getElementsByClassName("search-result-body")[0]
-                const stylesheets = body.querySelectorAll("link[rel='stylesheet']")
-                for(const stylesheet of stylesheets){
-                    const href = stylesheet.href
-                    console.log(href)
-                }
-                
                 board.appendChild(div)
 
                 i += 1
