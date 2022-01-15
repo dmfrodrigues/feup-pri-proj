@@ -9,7 +9,11 @@
         }
 
         body {
+            max-width: 1600px;
             margin: auto;
+            display: grid;
+            grid-template-columns: 250px auto;
+            column-gap: 40px;
         }
 
         textarea  {
@@ -21,6 +25,10 @@
             height: 10pc;
             overflow-y: scroll;
             white-space: pre-wrap;
+        }
+
+        #main{
+            display: block;
         }
 
         #files-container {
@@ -123,6 +131,10 @@
             padding: 0 10px 0 10px;
         }
 
+        #pagination {
+            margin-bottom: 200px;
+        }
+
         .doc-div {
             display: grid;
             grid-template-columns: auto 40px;
@@ -131,12 +143,7 @@
         }
         .doc-div input {
             width:  30px;
-            height: 30px;
-        }
-
-        /* Results pagination */
-        #pagination {
-            display: inline-block;
+            height: 30px;tabcont
         }
         #pagination a {
             color: black;
@@ -151,16 +158,6 @@
         #pagination a:hover:not(.active) {background-color: #ddd;}
 
         /* Faceting */
-        #faceting-container {
-            padding-left: 10px;
-            width: 200px; /* Set the width of the sidebar */
-            height: 100%;
-            position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-            z-index: 1; /* Stay on top */
-            top: 0; /* Stay at the top */
-            left: 0;
-            overflow-x: hidden; /* Disable horizontal scroll */
-        }
         #faceting-container > *:first-child{
             padding-top: 20px;
         }
@@ -199,6 +196,7 @@
         .tabcontent {
             display: none;
             padding: 0px 26px 6px;
+            font-size: 14px;
         }
         .tabcontent li{
             cursor: pointer;
@@ -207,9 +205,6 @@
             color: blue;
         }
 
-        #main {
-            margin-left: 210px;
-        }
     </style>
 </head>
 <body>
@@ -228,13 +223,15 @@
         </div>
     </div>
     <div id="main">
+        <h1>European Union legislation</h1>
+        <h2>Information retrieval system</h2>    
         <div id="search">
             <input placeholder="Search..." name="search" id="search-text">
             <button onclick="runQuery()">Search</button>
         </div>
-        <div id="pagination">
-        </div>
         <div id="board">
+        </div>
+        <div id="pagination">
         </div>
     </div>
 
@@ -410,7 +407,7 @@
                                 </table>
                             </div>
                             <div class="search-result-body">
-                                <pre>${doc.text}</pre>
+                                ${doc.text}
                             </div>
                         </div>
                     </details>
