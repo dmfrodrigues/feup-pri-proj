@@ -30,7 +30,7 @@ for row in r:
     if i%100 == 0:
         print(f"Processing {celex} (#{i})", file=sys.stderr)
     if celex in keys:
-        f = open(f"eurlex/texts/{pathencode(celex)}.txt", "r")
+        f = open(f"eurlex/texts/{pathencode(celex)}.html", "r")
         s = f.read()
         f.close()
         while "\n\n\n" in s: s = s.replace("\n\n\n", "\n\n")

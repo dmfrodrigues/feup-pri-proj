@@ -1,7 +1,10 @@
 data/eurlex/*.json
 data/eurlex/*.txt
+data/eurlex/*.html
 data/eurlex/texts/*.txt
+data/eurlex/texts/*.html
 data/eurlex/notexts/*.txt
+data/eurlex/notexts/*.html
 data/eurlex/*.csv
 *.zip
 .ipynb_checkpoints

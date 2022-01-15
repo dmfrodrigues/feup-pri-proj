@@ -177,6 +177,9 @@
             "stored": true,
             "multiValued": false,
             "indexAnalyzer":{
+                "charFilters":[
+                    {"class":"solr.HTMLStripCharFilterFactory"}
+                ],
                 "tokenizer":{
                     "class":"solr.StandardTokenizerFactory"
                 },
