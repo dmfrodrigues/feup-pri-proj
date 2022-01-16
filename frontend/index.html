@@ -5,7 +5,8 @@
 
     <style>
         html {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            /* font-family: "Roboto", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif; */
+            font-family: Tahoma,Verdana,Arial,Helvetica,sans-serif;
         }
 
         body {
@@ -47,11 +48,6 @@
             margin-top: 0;
         }
 
-        pre {
-            font-family: inherit;
-            white-space: pre-wrap;
-        }
-
         details {
             font-size: 12px;
             margin: 0 0 10px 0;
@@ -59,6 +55,11 @@
             border: 1px solid #a0a0a0;
             border-radius: 15px;
         }
+
+        .doc-div:last-child details {
+            margin-bottom: 0;
+        }
+
         details table {
             font-size: 12px;
         }
@@ -121,20 +122,19 @@
             border-radius: 8px;
             background-color: darkgray;
             color: white;
-            padding: 6px;
+            padding: 6px 8px;
             margin-right: 3px;
             margin-bottom: 3px;
         }
 
-        #board, #search, #pagination {
-            margin: 20px 0 0 0;
+        #search {
+            margin: 20px 0 20px 0;
             padding: 0 10px 0 10px;
         }
-
-        #pagination {
-            margin-bottom: 200px;
+        #board {
+            margin: 20px 0 30px 0;
+            padding: 0 10px 0 10px;
         }
-
         .doc-div {
             display: grid;
             grid-template-columns: auto 40px;
@@ -148,19 +148,28 @@
 
         /* Results pagination */
         #pagination {
-            display: inline-block;
+            margin: 0 auto 20px auto;
+            text-align: center;
         }
         #pagination a {
+            display: inline-block;
             color: black;
-            float: left;
-            padding: 8px 16px;
-            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            margin: 0 2px 0 2px;
+            border-radius: 20px;
+            text-align: center;
+            background-color: #ddd;
+            cursor: pointer;
+        }
+        #pagination a > div {
+            margin-top: 10px;
         }
         #pagination a.active {
             background-color: #4CAF50;
             color: white;
         }
-        #pagination a:hover:not(.active) {background-color: #ddd;}
+        #pagination a:hover:not(.active) {background-color: #aaa;}
 
         /* Faceting */
         #faceting-container > *:first-child{
@@ -214,7 +223,7 @@
 </head>
 <body>
     <div id="faceting-container">
-        <form onsubmit="runQuery(0, this.faceting); return false" id="faceting">
+        <form onsubmit="runQuery(1, this.faceting); return false" id="faceting">
             <label>Faceting</label><input type="submit" value="Apply"><br><br>
             <input type="checkbox" name="faceting" value="addressee">Addressee<br>
             <input type="checkbox" name="faceting" value="eurovoc_descriptors">Eurovoc Descriptors<br>
@@ -234,9 +243,9 @@
             <input placeholder="Search..." name="search" id="search-text">
             <button onclick="runQuery()">Search</button>
         </div>
-        <div id="board">
-        </div>
         <div id="pagination">
+        </div>
+        <div id="board">
         </div>
     </div>
 
@@ -246,7 +255,7 @@
             runQuery()
         })
 
-        function runQuery(page = 0, checkboxes_nodelist = getFacetCheckboxes(), faceting_filter = ''){
+        function runQuery(page = 1, checkboxes_nodelist = getFacetCheckboxes(), faceting_filter = ''){
             let text = document.getElementById('search-text').value
             let query = "http://localhost:8983/solr/docs/query?" +
                 "defType=dismax" + 
@@ -254,7 +263,7 @@
                 "&q=" + text +
                 facetQuery(checkboxes_nodelist) + 
                 faceting_filter +
-                "&start=" + page*10
+                "&start=" + (page-1)*10
             
             var xmlHttp = new XMLHttpRequest()
             xmlHttp.onreadystatechange = function() {
@@ -263,7 +272,7 @@
                 // console.log(query)
                 // console.log(xmlHttp.response)
 
-                updatePagination(xmlHttp.response)
+                updatePagination(page, xmlHttp.response)
                 updateFacetingResults(xmlHttp.response)
                 updateBoardData(xmlHttp.response, page)
             }
@@ -272,15 +281,24 @@
             xmlHttp.send( null )
         }
 
-        function updatePagination(dataObj){
+        const NUMBER_PAGES_DISPLAY = 10
+        const RESULTS_PER_PAGE = 10
+
+        function updatePagination(page, dataObj){
             let div = document.getElementById('pagination')
             div.innerHTML = ''
 
-            let nPages = Math.ceil(dataObj.response.numFound / 10)
-            for (let i = 1 ; i <= Math.min(nPages, 20) ; i++){
+            let nPages = Math.ceil(dataObj.response.numFound / RESULTS_PER_PAGE)
+            let minPage = Math.max(page-Math.ceil(NUMBER_PAGES_DISPLAY/2), 1)
+            let maxPage = Math.min(minPage+NUMBER_PAGES_DISPLAY-1, nPages)
+            if(maxPage-minPage+1 < NUMBER_PAGES_DISPLAY){
+                minPage = Math.max(1, maxPage - NUMBER_PAGES_DISPLAY + 1)
+            }
+            for (let i = minPage ; i <= maxPage ; i++){
                 let newPage = document.createElement('a')
-                newPage.setAttribute('onclick', `runQuery(${i-1})`)
-                newPage.innerHTML = i
+                newPage.setAttribute('onclick', `runQuery(${i})`)
+                newPage.innerHTML = `<div>${i}</div>`
+                if(i == page) newPage.classList.add('active')
                 div.appendChild(newPage)
             }
         }
@@ -417,6 +435,8 @@
                         </div>
                     </details>
                 `
+                div.getElementsByTagName("title")[0].remove()
+                
                 board.appendChild(div)
 
                 i += 1
