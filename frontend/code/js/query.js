@@ -3,15 +3,20 @@ document.getElementById('search-text').addEventListener('keyup', event => {
     runQuery()
 })
 
-function runQuery(page = 1, checkboxes_nodelist = getFacetCheckboxes(), faceting_filter = ''){
-    let text = document.getElementById('search-text').value
+var q_text = false
+var q_page = 1
+var qf = 'title^5 eurovoc_descriptors^5 subject_matter^5 text celex'
+var q_facetQuery = ''
+var q_facetFilter = ''
+function runQuery(){
+    let text = q_text? q_text:document.getElementById('search-text').value
     let query = "http://localhost:8983/solr/docs/query?" +
-        "defType=dismax" + 
-        "&qf='title^5 eurovoc_descriptors^5 subject_matter^5 text celex'" + 
+        "defType=edismax" + 
+        "&qf=" + qf + 
         "&q=" + text +
-        facetQuery(checkboxes_nodelist) + 
-        faceting_filter +
-        "&start=" + (page-1)*10
+        q_facetQuery + 
+        q_facetFilter +
+        "&start=" + (q_page-1)*10
     
     var xmlHttp = new XMLHttpRequest()
     xmlHttp.onreadystatechange = function() {
@@ -20,9 +25,9 @@ function runQuery(page = 1, checkboxes_nodelist = getFacetCheckboxes(), faceting
         // console.log(query)
         // console.log(xmlHttp.response)
 
-        updatePagination(page, xmlHttp.response)
+        updatePagination(q_page, xmlHttp.response)
         updateFacetingResults(xmlHttp.response)
-        updateBoardData(xmlHttp.response, page)
+        updateBoardData(xmlHttp.response, q_page)
     }
     xmlHttp.responseType = 'json'
     xmlHttp.open( "GET", query, true )
@@ -44,14 +49,11 @@ function updatePagination(page, dataObj){
     }
     for (let i = minPage ; i <= maxPage ; i++){
         let newPage = document.createElement('a')
-        newPage.setAttribute('onclick', `runQuery(${i})`)
+        newPage.setAttribute('onclick', `q_page=${i}; runQuery();`)
         newPage.innerHTML = `<div>${i}</div>`
         if(i == page) newPage.classList.add('active')
         div.appendChild(newPage)
     }
-
-    document.getElementById("arrow-left" ).setAttribute('onclick', `runQuery(${page-1})`)
-    document.getElementById("arrow-right").setAttribute('onclick', `runQuery(${page+1})`)
 
     l = document.getElementById("arrow-left").classList
     if(page-1 < 1) l.add("hidden"); else l.remove("hidden")

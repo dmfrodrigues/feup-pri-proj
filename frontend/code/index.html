@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="faceting-container">
-        <form onsubmit="runQuery(1, this.faceting); return false" id="faceting">
+        <form onsubmit="q_page=1; q_facetQuery = facetQuery(this.faceting); runQuery(); return false" id="faceting">
             <label>Faceting</label><input type="submit" value="Apply"><br><br>
             <input type="checkbox" name="faceting" value="addressee">Addressee<br>
             <input type="checkbox" name="faceting" value="eurovoc_descriptors">Eurovoc Descriptors<br>
@@ -30,14 +30,14 @@
         <h1>European Union legislation</h1>
         <h2>Information retrieval system</h2>    
         <div id="search">
-            <input placeholder="Search..." name="search" id="search-text">
-            <button onclick="runQuery()">Search</button>
+            <input placeholder="Search..." name="search" id="search-text" value="fish">
+            <button onclick="q_page=1; runQuery();">Search</button>
         </div>
         <div id="pagination">
             <div>
-                <a class="pagination-arrow hidden" id="arrow-left" onclick="runQuery(0);"><img src="res/img/arrow-left.svg" width=40px></a>
+                <a class="pagination-arrow hidden" id="arrow-left" onclick="q_page--;runQuery();"><img src="res/img/arrow-left.svg" width=40px></a>
                 <span id="pagination-pages"></span>
-                <a class="pagination-arrow hidden" id="arrow-right" onclick="runQuery(2);"><img src="res/img/arrow-right.svg" width=40px></a>
+                <a class="pagination-arrow hidden" id="arrow-right" onclick="q_page++;runQuery();"><img src="res/img/arrow-right.svg" width=40px></a>
             </div>
         </div>
         <div id="board">
