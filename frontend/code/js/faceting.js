@@ -3,7 +3,8 @@ function getFacetCheckboxes(){
     return document.getElementById('faceting').faceting
 }
 
-function facetQuery(checkboxes_nodelist){
+function facetQuery(checkboxes_nodelist = getFacetCheckboxes()){
+    console.log(checkboxes_nodelist)
     let facet_checkboxes = Array.from(checkboxes_nodelist)
 
     if (facet_checkboxes.length == 0 || 

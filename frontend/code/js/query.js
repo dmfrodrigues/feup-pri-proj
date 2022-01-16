@@ -3,6 +3,12 @@ document.getElementById('search-text').addEventListener('keyup', event => {
     runQuery()
 })
 
+function facetAndSearch(faceting_form){
+    q_page=1
+    q_facetQuery = facetQuery(faceting_form)
+    runQuery()
+}
+
 var q_text = false
 var q_page = 1
 var qf = 'title^5 eurovoc_descriptors^5 subject_matter^5 text celex'
