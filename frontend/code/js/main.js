@@ -43,7 +43,8 @@ function updateBoardData(dataObj, page){
                             <tr><th>Directory codes</th><td><div class="flex-wrap">${formatList(doc.directory_codes     )}</div></td></tr>
                             <tr><th>EuroVoc</th>        <td><div class="flex-wrap">${formatList(doc.eurovoc_descriptors )}</div></td></tr>
                             <tr><th>Legal basis</th>    <td><div class="flex-wrap">${formatList(doc.legal_basis         )}</div></td></tr>
-                            <tr><th>Relationships</th>  <td><div class="flex-wrap">${formatList(doc.relationships       )}</div></td></tr>
+                            <tr><th>Relationships</th>  <td><div class="flex-wrap">${formatList(doc.relationships       )}</div>
+                                    <br><a>See Related Documents</a></td></tr>
                         </table>
                     </div>
                     <iframe class="search-result-body" src="/eurlex/legal-content/EN/TXT/HTML/?celex=${doc.celex}">
@@ -53,6 +54,11 @@ function updateBoardData(dataObj, page){
         `
         
         board.appendChild(div)
+
+        div.querySelector('a').addEventListener('click', (evt) => {
+            
+            runQuery()
+        })
 
         i += 1
     }
