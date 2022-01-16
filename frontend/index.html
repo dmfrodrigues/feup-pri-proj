@@ -259,7 +259,7 @@
             let text = document.getElementById('search-text').value
             let query = "http://localhost:8983/solr/docs/query?" +
                 "defType=dismax" + 
-                "&qf='title^5 eurovoc_descriptors^5 subject_matter^5 text'" + 
+                "&qf='title^5 eurovoc_descriptors^5 subject_matter^5 text celex'" + 
                 "&q=" + text +
                 facetQuery(checkboxes_nodelist) + 
                 faceting_filter +
