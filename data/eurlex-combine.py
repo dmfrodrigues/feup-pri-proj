@@ -48,8 +48,6 @@ for row in r:
         row[relationships_idx] = filterRelationships(row[relationships_idx], keys)
         row[legalbasis_idx] = filterRelationships(row[legalbasis_idx], keys)
 
-        row[addressee_idx] = ";".join(row[addressee_idx].replace(" and ", ", ").split(", "))
-
         w.writerow(row)
     i += 1
 
