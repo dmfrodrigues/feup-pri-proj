@@ -86,7 +86,7 @@
             "indexAnalyzer":{
                 "tokenizer":{
                     "class":"solr.SimplePatternTokenizerFactory",
-                    "pattern":"[^,]+"
+                    "pattern":"[^;]+"
                 },
                 "filters":[
                     {"class":"solr.ClassicFilterFactory"},
