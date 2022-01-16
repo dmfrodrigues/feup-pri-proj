@@ -2,6 +2,7 @@ version: '3.7'
 
 services:
   pri_solr:
+    container_name: pri_solr
     build: solr
     ports:
       - "8983:8983"
