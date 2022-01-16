@@ -47,7 +47,7 @@ function updateBoardData(dataObj, page){
                             <tr><th>Relationships</th>  <td><div class="flex-wrap">${formatList(doc.relationships       )}</div></td></tr>
                         </table>
                     </div>
-                    <iframe class="search-result-body" src="/eurlex/legal-content/EN/TXT/HTML/?celex=${doc.celex}">
+                    <iframe class="search-result-body" src="/eurlex/legal-content/EN/TXT/HTML/?celex=${doc.celex}" sandbox="">
                     </iframe>
                 </div>
             </details>

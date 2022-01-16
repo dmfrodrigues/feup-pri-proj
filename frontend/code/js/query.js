@@ -1,6 +1,6 @@
 document.getElementById('search-text').addEventListener('keyup', event => {
     if(event.key !== "Enter") return
-    runQuery()
+    facetAndSearch()
 })
 
 function facetAndSearch(faceting_form){
