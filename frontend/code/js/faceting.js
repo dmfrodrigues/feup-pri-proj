@@ -1,3 +1,5 @@
+var q_facetQuery = ''
+var q_facetFilter = ''
 
 function getFacetCheckboxes(){
     return document.getElementById('faceting').faceting

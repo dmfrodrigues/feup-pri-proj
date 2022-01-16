@@ -57,7 +57,9 @@ function updateBoardData(dataObj, page){
         board.appendChild(div)
 
         div.querySelector('a').addEventListener('click', (evt) => {
-            
+            q_text = doc.relationships[0].split(';').join(' ')
+            qf = 'celex'
+            q_page = 1
             runQuery()
         })
 

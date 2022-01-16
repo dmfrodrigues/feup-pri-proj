@@ -4,7 +4,11 @@ document.getElementById('search-text').addEventListener('keyup', event => {
 })
 
 function facetAndSearch(faceting_form){
+    // Resetting default parameters
+    q_text = false
     q_page=1
+    qf = 'title^5 eurovoc_descriptors^5 subject_matter^5 addressee^2 text celex'
+
     q_facetQuery = facetQuery(faceting_form)
     runQuery()
 }
@@ -12,8 +16,6 @@ function facetAndSearch(faceting_form){
 var q_text = false
 var q_page = 1
 var qf = 'title^5 eurovoc_descriptors^5 subject_matter^5 addressee^2 text celex'
-var q_facetQuery = ''
-var q_facetFilter = ''
 function runQuery(){
     let text = q_text? q_text:document.getElementById('search-text').value
     let query = "http://localhost:8983/solr/docs/query?" +

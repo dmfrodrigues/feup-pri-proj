@@ -22,6 +22,10 @@ textarea  {
     white-space: pre-wrap;
 }
 
+a {
+    cursor: pointer;
+}
+
 #main{
     display: block;
 }
