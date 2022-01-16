@@ -39,6 +39,7 @@ function updateBoardData(dataObj, page){
                             <tr><th>OJ date</th>        <td>${formatDate(doc["oj_date"])}</td></tr>
                             <tr><th>Of effect</th>      <td>${formatDate(doc["of_effect"])}</td></tr>
                             <tr><th>End validity</th>   <td>${formatDate(doc["end_validity"])}</td></tr>
+                            <tr><th>Addressees</th>     <td><div class="flex-wrap">${formatList(doc.addressee           )}</div></td></tr>
                             <tr><th>Subject matter</th> <td><div class="flex-wrap">${formatList(doc.subject_matter      )}</div></td></tr>
                             <tr><th>Directory codes</th><td><div class="flex-wrap">${formatList(doc.directory_codes     )}</div></td></tr>
                             <tr><th>EuroVoc</th>        <td><div class="flex-wrap">${formatList(doc.eurovoc_descriptors )}</div></td></tr>
