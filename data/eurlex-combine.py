@@ -28,6 +28,7 @@ columns = next(r)
 celex_idx = columns.index("celex")
 relationships_idx = columns.index("relationships")
 legalbasis_idx = columns.index("legal_basis")
+addressee_idx = columns.index("addressee")
 columns.append("text")
 w.writerow(columns)
 
@@ -46,6 +47,8 @@ for row in r:
 
         row[relationships_idx] = filterRelationships(row[relationships_idx], keys)
         row[legalbasis_idx] = filterRelationships(row[legalbasis_idx], keys)
+
+        row[addressee_idx] = ";".join(row[addressee_idx].replace(" and ", ", ").split(", "))
 
         w.writerow(row)
     i += 1
