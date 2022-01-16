@@ -75,5 +75,6 @@ function clickFacetingField(event){
     event.currentTarget.className += " active"
 }
 function clickFacetingEntry(field, entry){
-    this.runQuery(undefined, undefined, `&fq={!raw f=${field}}${entry}`)
+    q_facetFilter = `&fq={!raw f=${field}}${entry}`
+    this.runQuery()
 }
