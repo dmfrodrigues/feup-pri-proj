@@ -152,7 +152,13 @@
             margin: 0 auto 20px auto;
             text-align: center;
         }
-        #pagination a {
+        #pagination > div {
+            display: inline;
+        }
+        #pagination-pages {
+            margin: 0 10px;
+        }
+        #pagination-pages a {
             display: inline-block;
             color: black;
             width: 40px;
@@ -161,16 +167,30 @@
             border-radius: 20px;
             text-align: center;
             background-color: #ddd;
-            cursor: pointer;
         }
-        #pagination a > div {
+        #pagination-pages a > div {
             margin-top: 10px;
         }
-        #pagination a.active {
+        #pagination-pages a.active {
             background-color: #4CAF50;
             color: white;
         }
-        #pagination a:hover:not(.active) {background-color: #aaa;}
+        #pagination-pages a:hover:not(.active) {
+            background-color: #aaa;
+        }
+        #pagination a.pagination-arrow {
+            position: relative;
+            top: +15px;
+            filter: brightness(250%);
+        }
+
+        #pagination a.pagination-arrow:hover {
+            filter: brightness(100%);
+        }
+
+        #pagination-pages a, #pagination a.pagination-arrow {
+            cursor: pointer;
+        }
 
         /* Faceting */
         #faceting-container > *:first-child{
@@ -220,6 +240,10 @@
             color: blue;
         }
 
+        .hidden {
+            visibility: hidden;
+        }
+
     </style>
 </head>
 <body>
@@ -245,6 +269,11 @@
             <button onclick="runQuery()">Search</button>
         </div>
         <div id="pagination">
+            <div>
+                <a class="pagination-arrow hidden" id="arrow-left" onclick="runQuery(0);"><img src="res/img/arrow-left.svg" width=40px></a>
+                <span id="pagination-pages"></span>
+                <a class="pagination-arrow hidden" id="arrow-right" onclick="runQuery(2);"><img src="res/img/arrow-right.svg" width=40px></a>
+            </div>
         </div>
         <div id="board">
         </div>
@@ -286,7 +315,7 @@
         const RESULTS_PER_PAGE = 10
 
         function updatePagination(page, dataObj){
-            let div = document.getElementById('pagination')
+            let div = document.getElementById('pagination-pages')
             div.innerHTML = ''
 
             let nPages = Math.ceil(dataObj.response.numFound / RESULTS_PER_PAGE)
@@ -302,6 +331,15 @@
                 if(i == page) newPage.classList.add('active')
                 div.appendChild(newPage)
             }
+
+            document.getElementById("arrow-left" ).setAttribute('onclick', `runQuery(${page-1})`)
+            document.getElementById("arrow-right").setAttribute('onclick', `runQuery(${page+1})`)
+
+            l = document.getElementById("arrow-left").classList
+            if(page-1 < 1) l.add("hidden"); else l.remove("hidden")
+
+            l = document.getElementById("arrow-right").classList
+            if(page+1 > nPages) l.add("hidden"); else l.remove("hidden")
         }
 
         function getFacetCheckboxes(){
