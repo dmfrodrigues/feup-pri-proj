@@ -86,7 +86,7 @@ for key in input_data:
         "of_effect": process_ofeffect_date(entry["of_effect"]),
         "end_validity": process_date(entry["end_validity"]),
         
-        "addressee": entry["addressee"],
+        "addressee": ";".join(entry["addressee"].replace(" and ", ", ").split(", ")),
 
         "subject_matter":      list(dict.fromkeys([v["subject_matter"] for v in entry["subject_matter"]])),
         "directory_codes":     list(dict.fromkeys([v["directory_code"] for v in entry["directory_codes"]])),
