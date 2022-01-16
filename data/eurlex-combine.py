@@ -28,6 +28,7 @@ columns = next(r)
 celex_idx = columns.index("celex")
 relationships_idx = columns.index("relationships")
 legalbasis_idx = columns.index("legal_basis")
+addressee_idx = columns.index("addressee")
 columns.append("text")
 w.writerow(columns)
 
