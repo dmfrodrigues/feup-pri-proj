@@ -411,9 +411,8 @@
                                     <tr><th>Relationships</th>  <td><div class="flex-wrap">${formatList(doc.relationships       )}</div></td></tr>
                                 </table>
                             </div>
-                            <div class="search-result-body">
-                                ${doc.text}
-                            </div>
+                            <iframe src="/eurlex/legal-content/EN/TXT/HTML/${doc.celex}.html">
+                            </iframe>
                         </div>
                     </details>
                 `
