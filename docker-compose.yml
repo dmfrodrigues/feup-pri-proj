@@ -10,8 +10,6 @@ services:
     build: frontend
     container_name: pri_web
     volumes:
-      - ./frontend/code/index.html:/var/www/html/index.html
-      - ./frontend/code/eurlex/.htaccess:/var/www/html/eurlex/.htaccess
-      - ./data/eurlex/texts:/var/www/html/eurlex/legal-content/EN/TXT/HTML
+      - ./frontend/code:/var/www/html
     ports:
       - 8000:80
