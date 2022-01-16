@@ -97,9 +97,10 @@
             font-size: 14px;
         }
 
-        .search-result-body {
-            order: 1;
-            font-size: 16px;
+        iframe.search-result-body {
+            border: none;
+            width: 100%;
+            height: 500px;
         }
 
         .search-result-metadata th {
@@ -429,12 +430,11 @@
                                     <tr><th>Relationships</th>  <td><div class="flex-wrap">${formatList(doc.relationships       )}</div></td></tr>
                                 </table>
                             </div>
-                            <iframe src="/eurlex/legal-content/EN/TXT/HTML/${doc.celex}.html">
+                            <iframe class="search-result-body" src="/eurlex/legal-content/EN/TXT/HTML/${doc.celex}.html">
                             </iframe>
                         </div>
                     </details>
                 `
-                div.getElementsByTagName("title")[0].remove()
                 
                 board.appendChild(div)
 
