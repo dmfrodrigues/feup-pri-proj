@@ -57,7 +57,9 @@ function updateBoardData(dataObj, page){
         board.appendChild(div)
 
         div.querySelector('a').addEventListener('click', (evt) => {
-            q_text = doc.relationships[0].split(';').join(' ')
+            // Replace all semicolons with spaces and escape all parenthesis
+            q_text = doc.relationships[0].split(';').join(' ').replace(/([()])/g, "\\$1")
+            console.log(q_text)
             qf = 'celex'
             q_page = 1
             document.getElementById('search-text').value = ''
