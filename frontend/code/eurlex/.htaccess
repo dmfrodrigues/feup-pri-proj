@@ -1,4 +1,0 @@
-Redirect "/eurlex/css"           "https://eur-lex.europa.eu/css"
-Redirect "/eurlex/js"            "https://eur-lex.europa.eu/js"
-Redirect "/eurlex/revamp"        "https://eur-lex.europa.eu/revamp"
-Redirect "/eurlex/resource.html" "https://eur-lex.europa.eu/resource.html"
