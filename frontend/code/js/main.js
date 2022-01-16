@@ -60,6 +60,7 @@ function updateBoardData(dataObj, page){
             q_text = doc.relationships[0].split(';').join(' ')
             qf = 'celex'
             q_page = 1
+            document.getElementById('search-text').value = ''
             runQuery()
         })
 
