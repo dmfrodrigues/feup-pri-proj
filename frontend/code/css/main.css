@@ -191,7 +191,9 @@ iframe.search-result-body {
     padding-top: 20px;
 }
 #faceting label {
-    float: left
+    display: inline-block;
+    width: 100%;
+    padding-top: 5px;
 }
 
 /* Faceting results tabs */
