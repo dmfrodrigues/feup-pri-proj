@@ -6,7 +6,6 @@ function getFacetCheckboxes(){
 }
 
 function facetQuery(checkboxes_nodelist = getFacetCheckboxes()){
-    console.log(checkboxes_nodelist)
     let facet_checkboxes = Array.from(checkboxes_nodelist)
 
     if (facet_checkboxes.length == 0 || 
@@ -24,13 +23,14 @@ function facetQuery(checkboxes_nodelist = getFacetCheckboxes()){
     return result
 }
 
+var active_tab = false
 function updateFacetingResults(request){
-    if (!request.facet_counts) return
-
     let tabDiv = document.getElementById('faceting-results-tab')
     tabDiv.firstElementChild.innerHTML = ''
     while (tabDiv.lastChild.className != 'tab')
         tabDiv.removeChild(tabDiv.lastChild)
+
+    if (!request.facet_counts) return
 
     let fields = request.facet_counts.facet_fields
     for (let field in fields){
@@ -64,9 +64,14 @@ function updateFacetingResults(request){
             tabDiv.firstElementChild.appendChild(newTab)
         }
     }
+
+    if (active_tab){
+        clickFacetingField({currentTarget:active_tab})
+    }
 }
 
 function clickFacetingField(event){
+    console.log(active_tab)
     let tabContents = document.getElementsByClassName('tabcontent')
     for (let tab of tabContents) tab.style.display = 'none'
 
@@ -75,6 +80,8 @@ function clickFacetingField(event){
     
     document.getElementById(event.currentTarget.innerHTML).style.display = 'block'
     event.currentTarget.className += " active"
+
+    active_tab = event.currentTarget
 }
 function clickFacetingEntry(field, entry){
     q_facetFilter = `&fq={!raw f=${field}}${entry}`
