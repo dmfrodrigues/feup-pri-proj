@@ -3,6 +3,7 @@ FROM solr:8.10
 COPY /data/combined.csv /data/combined.csv
 
 COPY /schema/schema.json /data/schema.json
+COPY /synonyms/synonyms.txt /data/synonyms.txt
 
 COPY /config/startup.sh /scripts/startup.sh
 
