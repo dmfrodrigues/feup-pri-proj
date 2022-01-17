@@ -71,14 +71,15 @@ function updateFacetingResults(request){
 }
 
 function clickFacetingField(event){
-    console.log(active_tab)
     let tabContents = document.getElementsByClassName('tabcontent')
     for (let tab of tabContents) tab.style.display = 'none'
 
     let tabLinks = document.getElementsByClassName('tablink')
     for (let link of tabLinks) link.className = link.className.replace('active', '')
     
-    document.getElementById(event.currentTarget.innerHTML).style.display = 'block'
+    let tabContent = document.getElementById(event.currentTarget.innerHTML)
+    if (!tabContent) return
+    tabContent.style.display = 'block'
     event.currentTarget.className += " active"
 
     active_tab = event.currentTarget
