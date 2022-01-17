@@ -8,7 +8,6 @@ function facetAndSearch(faceting_form){
     q_text = false
     q_page=1
     qf = 'title^5 eurovoc_descriptors^5 subject_matter^5 addressee^2 text celex'
-    q_facetFilter = ''
 
     q_facetQuery = facetQuery(faceting_form)
     runQuery()
@@ -24,7 +23,7 @@ function runQuery(){
         "&qf=" + qf + 
         "&q=" + text +
         q_facetQuery + 
-        q_facetFilter +
+        formatFacetFilter() +
         "&start=" + (q_page-1)*10
     
     var xmlHttp = new XMLHttpRequest()

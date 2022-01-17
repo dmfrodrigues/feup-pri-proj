@@ -1,11 +1,14 @@
 var q_facetQuery = ''
-var q_facetFilter = ''
+var q_facetFilter = {}
 
-function getFacetCheckboxes(){
+function getFacetFieldsCheckboxes(){
     return document.getElementById('faceting').faceting
 }
+function getFacetValuesCheckboxes(name){
+    return document.getElementById(name).children
+}
 
-function facetQuery(checkboxes_nodelist = getFacetCheckboxes()){
+function facetQuery(checkboxes_nodelist = getFacetFieldsCheckboxes()){
     let facet_checkboxes = Array.from(checkboxes_nodelist)
 
     if (facet_checkboxes.length == 0 || 
@@ -47,16 +50,18 @@ function updateFacetingResults(request){
         let newEntry
         for(let entry of fields[field]){
             i++
-            if (i % 2){ // Entry is value
+            if (!(i % 2)){ // Entry is name
+                newEntry = document.createElement('li')
+                newEntry.innerHTML = 
+                    `<label>
+                        <input type="checkbox" onChange="updateFacetFilter(this.checked, '${field}', '${entry}')" name="faceting" value="">
+                        <b>${entry}`
+            }
+            else{ // Entry is value
                 if (entry == '0') continue
 
-                newEntry.innerHTML+=` (${entry})`
+                newEntry.innerHTML+=` (${entry})</b></label>`
                 newContent.appendChild(newEntry)
-            }
-            else{ // Entry is name
-                newEntry = document.createElement('li')
-                newEntry.innerHTML = `<b>${entry}</b>`
-                newEntry.setAttribute('onclick', `clickFacetingEntry('${field}', '${entry}')`)
             }
         }
         if (newContent.childNodes.length > 1){
@@ -84,7 +89,23 @@ function clickFacetingField(event){
 
     active_tab = event.currentTarget
 }
-function clickFacetingEntry(field, entry){
-    q_facetFilter = `&fq={!raw f=${field}}${entry}`
-    this.runQuery()
+function updateFacetFilter(checked, field, entry){
+    let entryWords = entry.split(' ')
+    entry = entryWords.length>1? `'${entry}'`:entry
+
+    if (q_facetFilter[field]){
+        if (checked)
+            q_facetFilter[field] += ` ${entry}`
+        else
+            q_facetFilter[field] = q_facetFilter[field].replace(` ${entry}`, '')
+    }
+    else if (checked) q_facetFilter[field] = ` ${entry}`
+}
+function formatFacetFilter(){
+    let result = []
+    for (let field in q_facetFilter){
+        result.push(`${field}:(${q_facetFilter[field].trim()})`)
+    }
+
+    return '&fq=' + result.join(' AND ')
 }

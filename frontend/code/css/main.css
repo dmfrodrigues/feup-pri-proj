@@ -187,10 +187,6 @@ iframe.search-result-body {
     filter: brightness(100%);
 }
 
-#pagination-pages a, #pagination a.pagination-arrow {
-    cursor: pointer;
-}
-
 /* Faceting */
 #faceting-container > *:first-child{
     padding-top: 20px;
@@ -198,6 +194,8 @@ iframe.search-result-body {
 #faceting label {
     display: inline-block;
     width: 100%;
+}
+#faceting form label{
     padding-top: 5px;
 }
 
@@ -233,9 +231,6 @@ iframe.search-result-body {
     display: none;
     padding: 0px 26px 6px;
     font-size: 14px;
-}
-.tabcontent li{
-    cursor: pointer;
 }
 .tabcontent li:hover{
     color: blue;
