@@ -48,7 +48,7 @@ function updateBoardData(dataObj, page){
                                     <br><a>See Related Documents</a></td></tr>
                         </table>
                     </div>
-                    <iframe class="search-result-body" src="/eurlex/legal-content/EN/TXT/HTML/?celex=${doc.celex}" sandbox="">
+                    <iframe class="search-result-body" src="/eurlex/legal-content/EN/TXT/HTML/?celex=${doc.celex.replace(/([()])/g, "\\$1")}" sandbox="">
                     </iframe>
                 </div>
             </details>
