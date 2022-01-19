@@ -27,6 +27,10 @@ a {
     color: blue;
 }
 
+.secondary{
+    color: gray
+}
+
 #main{
     display: block;
 }

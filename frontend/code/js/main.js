@@ -5,9 +5,9 @@ function formatDate(d){
 }
 
 function formatList(l) {
-    if(l == undefined) return "";
+    if(l == undefined) return '<span class="secondary">None</span>';
     l = l[0];
-    if(l.length <= 0) return "";
+    if(l.length <= 0) return '<span class="secondary">None</span>';
     return l.split(';').map(t => `<span class="tag">${t}</span>`).join('');
 }
 
