@@ -3,20 +3,22 @@ document.getElementById('search-text').addEventListener('keyup', event => {
     facetAndSearch()
 })
 
-function facetAndSearch(faceting_form){
+function facetAndSearch(updateFacet=true){
     // Resetting default parameters
     q_text = false
     q_page=1
     qf = 'title^5 eurovoc_descriptors^5 subject_matter^5 addressee^2 text celex'
 
-    q_facetQuery = facetQuery(faceting_form)
-    runQuery()
+    if (updateFacet)
+        q_facetQuery = facetQuery()
+
+    runQuery(updateFacet)
 }
 
 var q_text = false
 var q_page = 1
 var qf = 'title^5 eurovoc_descriptors^5 subject_matter^5 addressee^2 text celex'
-function runQuery(){
+function runQuery(updateFacet=true){
     let text = q_text? q_text:document.getElementById('search-text').value
     let query = "http://localhost:8983/solr/docs/query?" +
         "defType=edismax" + 
@@ -33,8 +35,10 @@ function runQuery(){
         // console.log(query)
         // console.log(xmlHttp.response)
 
+        if (updateFacet)
+            updateFacetingResults(xmlHttp.response)
+
         updatePagination(q_page, xmlHttp.response)
-        updateFacetingResults(xmlHttp.response)
         updateBoardData(xmlHttp.response, q_page)
     }
     xmlHttp.responseType = 'json'

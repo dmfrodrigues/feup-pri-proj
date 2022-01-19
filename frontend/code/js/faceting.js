@@ -91,7 +91,7 @@ function clickFacetingField(event){
 }
 function updateFacetFilter(checked, field, entry){
     let entryWords = entry.split(' ')
-    entry = entryWords.length>1? `'${entry}'`:entry
+    entry = entryWords.length>1? `"${entry}"`:entry
 
     if (q_facetFilter[field]){
         if (checked)
@@ -100,11 +100,15 @@ function updateFacetFilter(checked, field, entry){
             q_facetFilter[field] = q_facetFilter[field].replace(` ${entry}`, '')
     }
     else if (checked) q_facetFilter[field] = ` ${entry}`
+
+    facetAndSearch(false)
 }
 function formatFacetFilter(){
     let result = []
     for (let field in q_facetFilter){
-        result.push(`${field}:(${q_facetFilter[field].trim()})`)
+        let val = q_facetFilter[field].trim()
+        if (val)
+            result.push(`${field}:(${val})`)
     }
 
     return '&fq=' + result.join(' AND ')
