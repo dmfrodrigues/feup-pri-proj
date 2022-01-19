@@ -239,6 +239,9 @@ iframe.search-result-body {
 .tabcontent li:hover{
     color: blue;
 }
+ul{
+    list-style-type: none;
+}
 
 .hidden {
     visibility: hidden;
