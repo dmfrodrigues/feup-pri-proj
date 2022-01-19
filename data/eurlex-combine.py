@@ -17,18 +17,21 @@ def filterRelationships(col, keys):
 assert len(sys.argv) == 3
 
 filtered_file = open(sys.argv[1], "r")
-texts_file    = open(sys.argv[2], "r")
+ranked_file   = open(sys.argv[2], "r")
 
-keys = set([s.strip() for s in texts_file.readlines()])
-
-w = csv.writer(sys.stdout)
+ranks = dict()
+r = csv.reader(ranked_file)
+next(r)
+for row in r:
+    celex, rank = row
+    ranks[celex] = rank
+ranked_file.close()
 
 r = csv.reader(filtered_file)
+w = csv.writer(sys.stdout)
 columns = next(r)
 celex_idx = columns.index("celex")
-relationships_idx = columns.index("relationships")
-legalbasis_idx = columns.index("legal_basis")
-addressee_idx = columns.index("addressee")
+columns.append("rank")
 columns.append("text")
 w.writerow(columns)
 
@@ -37,19 +40,17 @@ for row in r:
     celex = row[celex_idx]
     if i%100 == 0:
         print(f"Processing {celex} (#{i})", file=sys.stderr)
-    if celex in keys:
+    if celex in ranks:
         f = open(f"eurlex/texts/{pathencode(celex)}.html", "r")
-        s = f.read()
+        text = f.read()
         f.close()
-        while "\n\n\n" in s: s = s.replace("\n\n\n", "\n\n")
-        s = s.replace(u'\u00A0', ' ')
-        row.append(s)
-
-        row[relationships_idx] = filterRelationships(row[relationships_idx], keys)
-        row[legalbasis_idx] = filterRelationships(row[legalbasis_idx], keys)
+        # text = text.replace(u'\u00A0', ' ')
+        
+        row.append(ranks[celex])
+        row.append(text)
 
         w.writerow(row)
     i += 1
 
 filtered_file.close()
-texts_file.close()
+

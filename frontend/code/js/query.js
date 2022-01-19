@@ -18,12 +18,14 @@ function facetAndSearch(updateFacet=true){
 var q_text = false
 var q_page = 1
 var qf = 'title^5 eurovoc_descriptors^5 subject_matter^5 addressee^2 text celex'
+var boost = 'sum(1,div(sum(log(sum(log(rank),6.5)),0.163),0.820))'
 function runQuery(updateFacet=true){
     let text = q_text? q_text:document.getElementById('search-text').value
     let query = "http://localhost:8983/solr/docs/query?" +
         "defType=edismax" + 
         "&qf=" + qf + 
         "&q=" + text +
+        "&boost=" + boost +
         q_facetQuery + 
         formatFacetFilter() +
         "&start=" + (q_page-1)*10
