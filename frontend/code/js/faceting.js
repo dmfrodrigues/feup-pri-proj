@@ -93,22 +93,23 @@ function updateFacetFilter(checked, field, entry){
     let entryWords = entry.split(' ')
     entry = entryWords.length>1? `"${entry}"`:entry
 
-    if (q_facetFilter[field]){
+    let fieldSet = q_facetFilter[field]
+    if (fieldSet){
         if (checked)
-            q_facetFilter[field] += ` ${entry}`
+            fieldSet.add(entry)
         else
-            q_facetFilter[field] = q_facetFilter[field].replace(` ${entry}`, '')
+            fieldSet.delete(entry)
     }
-    else if (checked) q_facetFilter[field] = ` ${entry}`
+    else if (checked) q_facetFilter[field] = new Set([entry])
 
     facetAndSearch(false)
 }
 function formatFacetFilter(){
     let result = []
     for (let field in q_facetFilter){
-        let val = q_facetFilter[field].trim()
-        if (val)
-            result.push(`${field}:(${val})`)
+        let val = Array.from(q_facetFilter[field])
+        if (val.length)
+            result.push(`${field}:(${val.join(' AND ')})`)
     }
 
     return '&fq=' + result.join(' AND ')
