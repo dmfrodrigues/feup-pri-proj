@@ -50,7 +50,11 @@ function updateFacetingResults(request){
         let newEntry
         for(let entry of fields[field]){
             i++
+            
             if (!(i % 2)){ // Entry is name
+                // Special case for 'empty' value
+                if (entry == "#") entry = 'None'
+
                 newEntry = document.createElement('li')
                 newEntry.innerHTML = 
                     `<label>
@@ -60,8 +64,12 @@ function updateFacetingResults(request){
             else{ // Entry is value
                 if (entry == '0') continue
 
+                let entryIsEmpty = newEntry.innerHTML.includes("None")
                 newEntry.innerHTML+=` (${entry})</b></label>`
-                newContent.appendChild(newEntry)
+                if (entryIsEmpty)
+                    newContent.insertBefore(newEntry, newContent.firstChild)
+                else
+                    newContent.appendChild(newEntry)
             }
         }
         if (newContent.childNodes.length > 1){
@@ -108,7 +116,7 @@ function formatFacetFilter(){
     let result = []
     for (let field in q_facetFilter){
         // Special case for 'empty' val
-        if (q_facetFilter[field].has('#')){
+        if (q_facetFilter[field].has('None')){
             result.push(`-${field}:[* TO *]`)
         }
         else {
