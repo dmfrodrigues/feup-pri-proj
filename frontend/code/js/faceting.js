@@ -1,12 +1,14 @@
 var q_facetQuery = ''
-var q_facetFilter = ''
+var q_facetFilter = {}
 
-function getFacetCheckboxes(){
+function getFacetFieldsCheckboxes(){
     return document.getElementById('faceting').faceting
 }
+function getFacetValuesCheckboxes(name){
+    return document.getElementById(name).children
+}
 
-function facetQuery(checkboxes_nodelist = getFacetCheckboxes()){
-    console.log(checkboxes_nodelist)
+function facetQuery(checkboxes_nodelist = getFacetFieldsCheckboxes()){
     let facet_checkboxes = Array.from(checkboxes_nodelist)
 
     if (facet_checkboxes.length == 0 || 
@@ -24,13 +26,14 @@ function facetQuery(checkboxes_nodelist = getFacetCheckboxes()){
     return result
 }
 
+var active_tab = false
 function updateFacetingResults(request){
-    if (!request.facet_counts) return
-
     let tabDiv = document.getElementById('faceting-results-tab')
     tabDiv.firstElementChild.innerHTML = ''
     while (tabDiv.lastChild.className != 'tab')
         tabDiv.removeChild(tabDiv.lastChild)
+
+    if (!request.facet_counts) return
 
     let fields = request.facet_counts.facet_fields
     for (let field in fields){
@@ -47,22 +50,36 @@ function updateFacetingResults(request){
         let newEntry
         for(let entry of fields[field]){
             i++
-            if (i % 2){ // Entry is value
+            
+            if (!(i % 2)){ // Entry is name
+                // Special case for 'empty' value
+                if (entry == "#") entry = 'None'
+
+                newEntry = document.createElement('li')
+                newEntry.innerHTML = 
+                    `<label>
+                        <input type="checkbox" onChange="updateFacetFilter(this.checked, '${field}', '${entry}')" name="faceting" value="">
+                        <b>${entry}`
+            }
+            else{ // Entry is value
                 if (entry == '0') continue
 
-                newEntry.innerHTML+=` (${entry})`
-                newContent.appendChild(newEntry)
-            }
-            else{ // Entry is name
-                newEntry = document.createElement('li')
-                newEntry.innerHTML = `<b>${entry}</b>`
-                newEntry.setAttribute('onclick', `clickFacetingEntry('${field}', '${entry}')`)
+                let entryIsEmpty = newEntry.innerHTML.includes("None")
+                newEntry.innerHTML+=` (${entry})</b></label>`
+                if (entryIsEmpty)
+                    newContent.insertBefore(newEntry, newContent.firstChild)
+                else
+                    newContent.appendChild(newEntry)
             }
         }
         if (newContent.childNodes.length > 1){
             tabDiv.appendChild(newContent)
             tabDiv.firstElementChild.appendChild(newTab)
         }
+    }
+
+    if (active_tab){
+        clickFacetingField({currentTarget:active_tab})
     }
 }
 
@@ -73,10 +90,41 @@ function clickFacetingField(event){
     let tabLinks = document.getElementsByClassName('tablink')
     for (let link of tabLinks) link.className = link.className.replace('active', '')
     
-    document.getElementById(event.currentTarget.innerHTML).style.display = 'block'
+    let tabContent = document.getElementById(event.currentTarget.innerHTML)
+    if (!tabContent) return
+    tabContent.style.display = 'block'
     event.currentTarget.className += " active"
+
+    active_tab = event.currentTarget
 }
-function clickFacetingEntry(field, entry){
-    q_facetFilter = `&fq={!raw f=${field}}${entry}`
-    this.runQuery()
+function updateFacetFilter(checked, field, entry){
+    let entryWords = entry.split(' ')
+    entry = entryWords.length>1? entryWords.join('*'):entry
+
+    let fieldSet = q_facetFilter[field]
+    if (fieldSet){
+        if (checked)
+            fieldSet.add(entry)
+        else
+            fieldSet.delete(entry)
+    }
+    else if (checked) q_facetFilter[field] = new Set([entry])
+    console.log(q_facetFilter)
+    facetAndSearch(false)
+}
+function formatFacetFilter(){
+    let result = []
+    for (let field in q_facetFilter){
+        // Special case for 'empty' val
+        if (q_facetFilter[field].has('None')){
+            result.push(`-${field}:[* TO *]`)
+        }
+        else {
+            let val = Array.from(q_facetFilter[field])
+            if (val.length)
+                result.push(`${field}:(${val.join(' AND ')})`)   
+        }
+    }
+
+    return '&fq=' + result.join(' AND ')
 }
