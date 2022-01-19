@@ -66,8 +66,9 @@ function updateFacetingResults(request){
 
                 let entryIsEmpty = newEntry.innerHTML.includes("None")
                 newEntry.innerHTML+=` (${entry})</b></label>`
-                if (entryIsEmpty)
+                if (entryIsEmpty){
                     newContent.insertBefore(newEntry, newContent.firstChild)
+                }
                 else
                     newContent.appendChild(newEntry)
             }
@@ -81,6 +82,14 @@ function updateFacetingResults(request){
     if (active_tab){
         clickFacetingField({currentTarget:active_tab})
     }
+}
+
+function checkForNone(checked, field, entry){
+    if (entry != "None") return
+    
+    let siblingCheckboxes = Array.from(document.querySelectorAll(`#${field} input`)).slice(1)
+    for (let checkbox of siblingCheckboxes)
+        checkbox.disabled = checked
 }
 
 function clickFacetingField(event){
@@ -98,6 +107,7 @@ function clickFacetingField(event){
     active_tab = event.currentTarget
 }
 function updateFacetFilter(checked, field, entry){
+    checkForNone(checked, field, entry)
     let entryWords = entry.split(' ')
     entry = entryWords.length>1? entryWords.join('*'):entry
 
@@ -109,7 +119,7 @@ function updateFacetFilter(checked, field, entry){
             fieldSet.delete(entry)
     }
     else if (checked) q_facetFilter[field] = new Set([entry])
-    console.log(q_facetFilter)
+
     facetAndSearch(false)
 }
 function formatFacetFilter(){
