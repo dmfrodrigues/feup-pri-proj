@@ -1,0 +1,440 @@
+% Copyright (C) 2021-2022 Diogo Rodrigues
+% Distributed under the terms of license
+% Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+
+\documentclass[table]{beamer}
+% Encodings (to render letters with diacritics and special characters)
+\usepackage[utf8]{inputenc}
+% Language
+\usepackage[english]{babel}
+\usepackage{verbatim}
+
+\usepackage{multicol}
+
+\usepackage{setspace}
+
+% \usepackage[table]{xcolor} 
+
+\usepackage{multicol}
+
+\usepackage[]{siunitx}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\pdfstringdefDisableCommands{
+  \def\\{}
+  \def\texttt#1{<#1>}
+}
+
+\newcommand{\email}[1]{{\footnotesize\texttt{\href{mailto:#1}{#1}}}}
+
+\usepackage{caption}
+\DeclareCaptionFont{black}{\color{black}}
+\DeclareCaptionFormat{listing}{{\tiny \textbf{#1}#2#3}}
+\captionsetup[lstlisting]{format=listing,labelfont=black,textfont=black}
+\usepackage{subfigure}
+
+\usepackage{listings}
+% \lstset{
+%     frame=tb, % draw frame at top and bottom of the code
+%     basewidth  = {0.5em,0.5em},
+%     numbers=left, % display line numbers on the left
+%     showstringspaces=false, % don't mark spaces in strings  
+%     commentstyle=\color{green}, % comment color
+%     keywordstyle=\color{blue}, % keyword color
+%     stringstyle=\color{red}, % string color
+% 	aboveskip=-0.2em,
+%     belowskip=-0.2em,
+%     basicstyle=\tiny
+% }
+\lstset{
+    basicstyle=\ttfamily\tiny,
+    columns=fullflexible,
+    % frame=tb, % draw frame at top and bottom of the code
+    tabsize=2, % tab space width
+    % numbers=left, % display line numbers on the left
+    showstringspaces=true, % don't show spaces in strings
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red} % string color
+}
+\lstset{literate=
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {Ã}{{\~A}}1 {ã}{{\~a}}1 {Õ}{{\~O}}1 {õ}{{\~o}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+}
+
+\usepackage{dirtree}
+
+\usepackage[style=british]{csquotes}
+
+\usepackage{tabularx}
+
+\usepackage{svg}
+\usepackage{graphicx}
+
+\graphicspath{{../img}}
+ 
+%Information to be included in the title page:
+\AtBeginDocument{
+\title[European legislation]{Information Retrieval System for EU Legislation}
+\subtitle[Milestone 3]{Milestone 3 -- Search System Improvements}
+\author[G74]{
+    \small
+    \begin{tabular}{l l}
+        \email{up201806429@edu.fe.up.pt} & Diogo Miguel Ferreira Rodrigues \\
+        \email{up201806613@edu.fe.up.pt} & João António Cardoso Vieira e Basto de Sousa \\
+        \email{up201806330@edu.fe.up.pt} & Rafael Soares Ribeiro \\
+    \end{tabular}
+}
+\institute[FEUP/PRI]{Faculty of Engineering of the University of Porto \\ M.EIC -- Information Processing and Retrieval (PRI)}
+\date[17/12/2021]{21st of January, 2022}
+}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Data model}
+
+\centering
+
+\includegraphics[width=90mm]{diagram-class-diagram.drawio.pdf}
+
+\end{frame}
+
+\begin{frame}{Information retrieval tool}
+
+\begin{minipage}{1.0\textwidth}
+    \begin{figure}[ht]
+        \centering
+        \includesvg[width=0.6\linewidth]{solr.svg}
+    \end{figure}
+\end{minipage}
+
+\vspace{10mm}
+
+\centering
+Indexing data \& querying results
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Improvements}
+\framesubtitle{Query parsers}
+
+% TODO: We tested different query parsers, and we liked eDisMax the most.
+
+% Here are some graphs: TODO
+
+\begin{minipage}{0.38\textwidth}
+~
+
+Lucene, DisMax and eDisMax parser comparisons for Query 7.
+
+~
+
+eDisMax achieved the best scores which are more noticeable when comparing f-measure values.
+
+~
+
+\begin{table}[ht]
+    \centering
+    \setlength{\tabcolsep}{0.9em}
+    \begin{tabular}{@{}l|r@{}}
+        \textbf{Parser}  & AvP \\ \hline
+        Lucene           & 0.60 \\
+        DisMax           & 0.64 \\
+        eDisMax          & 0.73 \\
+    \end{tabular}
+\end{table}
+
+
+\end{minipage}
+\begin{minipage}{0.61\textwidth}
+    \begin{figure}[ht]
+        \centering
+        %\includesvg[width=\linewidth]{recall-precision.svg}
+        \includesvg[height=0.52\linewidth]{recall-precision-query-parsers.svg}
+        \includesvg[height=0.52\linewidth]{f-measure-query-parsers.svg}
+    \end{figure}
+\end{minipage}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Improvements}
+\framesubtitle{Front-end}
+
+\centering
+\includegraphics[scale=0.2]{frontend.png}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Improvements}
+\framesubtitle{Front-end}
+
+\centering
+\includegraphics[scale=0.2]{frontend-expanded.png}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Improvements}
+\framesubtitle{Related documents}
+
+\centering
+
+\begin{minipage}{0.30\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{related-docs-metadata}
+\end{minipage}
+\hfill\vline\hfill
+\begin{minipage}{0.67\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{related-docs-list}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Improvements}
+\framesubtitle{Faceting}
+
+\centering
+\includegraphics[width=0.8\textwidth]{faceting}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Improvements}
+\framesubtitle{Faceting}
+
+\centering
+\includegraphics[width=0.8\textwidth]{faceting-applied}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Improvements}
+\framesubtitle{Synonyms}
+
+\small
+\centering
+
+\begin{minipage}[c]{0.40\textwidth}
+\centering
+    \includegraphics[scale=0.2]{wordnet}
+\end{minipage}
+\begin{minipage}[c]{0.40\textwidth}
+\footnotesize
+    Prolog facts
+    \begin{lstlisting}
+s(100001740,1,'entity',n,1,11).
+s(100001930,1,'physical entity',n,1,0).
+s(100002137,1,'abstraction',n,6,0).
+s(100002137,2,'abstract entity',n,1,0).
+s(100002452,1,'thing',n,12,0).
+s(100002684,1,'object',n,1,51).
+s(100002684,2,'physical object',n,1,0).
+...
+    \end{lstlisting}\end{minipage} \\[5pt]
+
+    
+{\large $\downarrow$} \\[2pt]
+
+Java class \texttt{Syns2Syms} (from GitHub) \\[2pt]
+
+{\large $\downarrow$} \\[5pt]
+
+\begin{minipage}[c]{0.40\textwidth}
+    \centering\includesvg[scale=0.15]{solr.svg}
+\end{minipage}
+\begin{minipage}[c]{0.40\textwidth}
+\footnotesize
+    Solr synonyms
+    \begin{lstlisting}
+a, adenine, amp, ampere, angstrom, axerophthol
+aachen, aken
+aah, ooh
+aalborg, alborg
+aar, aare
+aardvark, anteater
+aare, aar
+aarhus, arhus
+...
+    \end{lstlisting}\end{minipage}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Improvements}
+\framesubtitle{Page rating}
+
+\begin{minipage}[c]{0.58\textwidth}
+    
+\begin{block}{PageRank}
+\footnotesize
+Scores pages by importance:
+
+\begin{itemize}
+    \item Pages that are more endorsed are more important
+    \item Pages endorsed by important pages are very important
+\end{itemize}
+
+\vspace{-1em}
+\begin{equation*}
+    p(v)_t = \begin{cases}
+        \displaystyle\frac{1}{N} &: t=0 \\[8pt]
+        \displaystyle\frac{1-\alpha}{N} + \alpha \sum_{u:~(u,v) \in E}{\frac{p(u)_{t-1}}{out(u)}} &: t>0
+    \end{cases} \label{eq:iterative}
+\end{equation*}
+
+~
+
+\end{block}
+
+\end{minipage} ~~
+\begin{minipage}[c]{0.38\textwidth}
+    \centering
+    \includegraphics[scale=0.10]{PageRanks-Example}
+    
+    ~
+    
+    \includegraphics[scale=0.35]{networkx_logo}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{minipage}[t]{0.33\linewidth}
+    \centering
+    \includesvg[scale=0.30]{rank-histogram.svg}
+\end{minipage}%
+\begin{minipage}[t]{0.33\linewidth}
+    \centering
+    \includesvg[scale=0.30]{rank-expr-histogram.svg}
+\end{minipage}%
+\begin{minipage}[t]{0.33\linewidth}
+    \centering
+    \includesvg[scale=0.20]{rank-lorenz.svg}
+\end{minipage}
+
+Mathematically,    
+\begin{equation*}
+    p' = (\log_{10}{(\log_{10}{p} + 6.5)} + 0.163)/0.820
+\end{equation*}
+
+In Solr,
+\begin{verbatim}
+boost: sum(1,div(sum(log(sum(log(rank),6.5)),0.163),0.82))
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\frametitle{Result reevaluation}
+
+\begin{minipage}{0.35\textwidth}
+\small
+Parser: eDisMax
+
+~
+
+Configurations:
+\scriptsize
+\begin{verbatim}
+qf:
+  title^5 eurovoc_descriptors^5
+  subject_matter^5 text
+boost:
+  sum(1,div(sum(log(sum(
+  log(rank),6.5)),0.163),0.82))
+\end{verbatim}
+
+~
+
+\small
+Comparison Results:
+
+Positive: Q3, Q7 \\
+Neutral: Q1, Q2, Q6 \\
+Negative: Q4, Q5
+
+~
+
+MAP: 0.68 ( = )
+
+\end{minipage}
+\begin{minipage}{0.64\textwidth}
+    \begin{figure}[ht]
+        \centering
+        %\includesvg[width=\linewidth]{recall-precision.svg}
+        \includesvg[width=0.90\linewidth]{recall-precision-interpolated-new.svg}
+    \end{figure}
+    
+    \begin{table}[ht]
+    \centering
+    \tiny
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{@{}l | r@{\hspace{3pt}}r | r@{\hspace{3pt}}r | r@{\hspace{3pt}}r | r@{\hspace{3pt}}r@{}}
+        \textbf{Query}   & \multicolumn{2}{c|}{AvP} & \multicolumn{2}{c|}{P@10} & \multicolumn{2}{c|}{R@10} & \multicolumn{2}{c}{F@10}  \\ \hline
+        Query 1          & 0.45 & (-0.05) & 0.50 & (+0.10) & 0.56 & (-0.01) & 0.53 & (+0.06) \\
+        Query 2          & 0.77 & (-0.08) & 0.80 & (=)     & 0.10 & (=)     & 0.17 & (=)     \\
+        Query 3          & 0.83 & (+0.53) & 1.00 & (+0.60) & 0.14 & (+0.01) & 0.25 & (+0.05) \\
+        Query 4          & 0.70 & (-0.30) & 0.60 & (-0.40) & 0.09 & (-0.01) & 0.16 & (-0.02) \\
+        Query 5          & 0.22 & (-0.33) & 0.30 & (-0.20) & 0.18 & (-0.32) & 0.22 & (-0.28) \\
+        Query 6          & 0.87 & (-0.06) & 0.80 & (-0.20) & 0.12 & (-0.02) & 0.21 & (-0.04) \\
+        Query 7          & 0.89 & (+0.29) & 0.90 & (+0.20) & 0.11 & (-0.01) & 0.19 & (-0.02) \\
+    \end{tabular}
+\end{table}
+\end{minipage}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Analysis}
+
+Plausible causes for the lacking performance improvements:
+\begin{itemize}
+    \item \textbf{Poor synonym usage:} synonyms in Solr
+cannot be handled in a flexible way. Therefore, global meaning of the expression is lost and Solr considers the original word and its synonyms as equals.
+    \item \textbf{Parser change:} Lucene is a query parser designed for more technical/analytical search (user specifies words to search in each field), while DisMax/eDisMax are better suited for free-text search (currently the most common paradigm for search engines).
+    \item \textbf{Problem with DisMax/eDisMax:} either \textit{a priori} and equal parameter configuration for all queries (alternative used) or query-specific parameter tuning (impractical solution). Not the case with Lucene where the parameters are overfit for each query.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusions}
+
+\begin{itemize}
+    \item All milestone goals were met
+    \item Large dataset with data as coherent and complete as possible
+    \item \SI{99896}{} entries, \SI{3.44}{\giga\byte}
+    \item Successfully indexed using Solr
+    \item Improved system by changing query parser, implementing front-end, synonyms, page rating
+    \item Results after reevaluation were mixed and similar to before improvements
+    \item Improper usage of synonyms caused by Solr limitations
+\end{itemize}
+
+\end{frame}
+
+\end{document}
