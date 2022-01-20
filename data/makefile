@@ -5,11 +5,11 @@ all: ../solr/data/combined.csv
 ../solr/data/combined.csv: eurlex/combined.csv
 	cp $< $@
 
-eurlex/final.js: eurlex/combined.csv eurlex-csv2json.py
-	python3 eurlex-csv2json.py < $< > $@
+eurlex/combined.csv: eurlex/filtered.csv eurlex/ranked.csv eurlex-combine.py
+	python3 eurlex-combine.py eurlex/filtered.csv eurlex/ranked.csv > $@
 
-eurlex/combined.csv: eurlex/filtered.csv eurlex/texts.txt eurlex-combine.py
-	python3 eurlex-combine.py eurlex/filtered.csv eurlex/texts.txt > $@
+eurlex/ranked.csv: eurlex/texts.txt eurlex/filtered.csv eurlex-pagerank.py
+	python3 eurlex-pagerank.py eurlex/texts.txt eurlex/filtered.csv > $@
 
 eurlex/texts.txt: eurlex/filtered.csv eurlex-get-texts.py | eurlex/texts eurlex/notexts
 	python3 eurlex-get-texts.py < $< > $@

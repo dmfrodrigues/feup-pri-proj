@@ -2,27 +2,7 @@
 	"add-field-type": [
         {
             "name":"docId",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ClassicFilterFactory"},
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ClassicFilterFactory"},
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            }
+            "class":"solr.StrField"
         },
         
         {
@@ -36,7 +16,7 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             },
             "queryAnalyzer":{
@@ -47,7 +27,7 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.SnowballPorterFilterFactory"}
+                    {"class":"solr.KStemFilterFactory"}
                 ]
             }
         },
@@ -74,6 +54,7 @@
                     {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SynonymGraphFilterFactory", "synonyms":"res/synonyms.txt", "ignoreCase":"true", "expand":"true"},
                     {"class":"solr.KStemFilterFactory"}
                 ]
             }
@@ -86,7 +67,7 @@
             "indexAnalyzer":{
                 "tokenizer":{
                     "class":"solr.SimplePatternTokenizerFactory",
-                    "pattern":"[^,]+"
+                    "pattern":"[^;]+"
                 },
                 "filters":[
                     {"class":"solr.ClassicFilterFactory"},
@@ -105,6 +86,7 @@
                     {"class":"solr.TrimFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SynonymGraphFilterFactory", "synonyms":"res/synonyms.txt", "ignoreCase":"true", "expand":"true"},
                     {"class":"solr.KStemFilterFactory"}
                 ]
             }
@@ -165,6 +147,7 @@
                     {"class":"solr.TrimFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SynonymGraphFilterFactory", "synonyms":"res/synonyms.txt", "ignoreCase":"true", "expand":"true"},
                     {"class":"solr.KStemFilterFactory"}
                 ]
             }
@@ -177,6 +160,9 @@
             "stored": true,
             "multiValued": false,
             "indexAnalyzer":{
+                "charFilters":[
+                    {"class":"solr.HTMLStripCharFilterFactory"}
+                ],
                 "tokenizer":{
                     "class":"solr.StandardTokenizerFactory"
                 },
@@ -195,6 +181,8 @@
                 "filters":[
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
                     {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.SynonymGraphFilterFactory", "synonyms":"res/synonyms.txt", "ignoreCase":"true", "expand":"true"},
+                    {"class":"solr.StopFilterFactory", "words":"stopwords.txt", "ignoreCase":true},
                     {"class":"solr.KStemFilterFactory"}
                 ]
             }
@@ -203,6 +191,11 @@
         {
             "name":"docDate",
             "class":"solr.DatePointField"
+        },
+
+        {
+            "name":"docFloat",
+            "class":"solr.FloatPointField"
         }
         
     ],
@@ -276,6 +269,11 @@
         {
             "name": "eurovoc_descriptors",
             "type": "docListWords",
+            "indexed": true
+        },
+        {
+            "name": "rank",
+            "type": "docFloat",
             "indexed": true
         }
     ]
