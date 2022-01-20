@@ -26,11 +26,14 @@ for row in r:
     celex, rank = row
     ranks[celex] = rank
 ranked_file.close()
+keys = ranks.keys()
 
 r = csv.reader(filtered_file)
 w = csv.writer(sys.stdout)
 columns = next(r)
 celex_idx = columns.index("celex")
+legal_basis_idx = columns.index("legal_basis")
+relationships_idx = columns.index("relationships")
 columns.append("rank")
 columns.append("text")
 w.writerow(columns)
@@ -45,6 +48,9 @@ for row in r:
         text = f.read()
         f.close()
         # text = text.replace(u'\u00A0', ' ')
+
+        row[legal_basis_idx  ] = ";".join([i for i in row[legal_basis_idx  ].split(";") if i in keys])
+        row[relationships_idx] = ";".join([i for i in row[relationships_idx].split(";") if i in keys])
         
         row.append(ranks[celex])
         row.append(text)
