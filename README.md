@@ -20,4 +20,4 @@ To kill the container, use
 docker-compose down
 ```
 
-Solr is available at port 8984 (<localhost:8984>), the frontend is available at port 8000 (<localhost:8000>).
+Solr is available at port 8983 (<localhost:8983>), the frontend is available at port 8000 (<localhost:8000>).
